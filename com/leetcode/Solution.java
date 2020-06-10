@@ -1,10 +1,14 @@
 package com.leetcode;
-import com.leetcode.easy.*;
+
+import java.util.Arrays;
+
+import com.leetcode.easy.DailyTemperature;
+import com.leetcode.easy.PalindromNumber;
 
 public class Solution
 {
-    public static void main(String[] args)
+    public static void main(final String[] args)
     {
-        System.out.println(PalindromNumber.isPalindrome(23));
+        System.out.println(Arrays.toString(DailyTemperature.dailyTemperatures(new int[]{97,32,43,78})));
     }
 }
