@@ -5,6 +5,6 @@ public class Solution
 {
     public static void main(String[] args)
     {
-        System.out.println(MaxProductOfTwoNumber.maxProduct(new int[]{1,5,4,5}));
+        System.out.println(PalindromNumber.isPalindrome(23));
     }
 }
