@@ -3,7 +3,6 @@ package com.leetcode;
 import java.util.Arrays;
 
 import com.leetcode.easy.DailyTemperature;
-import com.leetcode.easy.PalindromNumber;
 
 public class Solution
 {
