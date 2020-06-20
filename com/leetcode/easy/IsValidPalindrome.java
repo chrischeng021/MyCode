@@ -18,13 +18,12 @@ public class IsValidPalindrome {
 
             while(!Character.isLetterOrDigit(left))
             {
-                i++;
-                left = s.charAt(i);
+                left = s.charAt(++i);
             }
 
             while(!Character.isLetterOrDigit(right))
             {
-                j--;
+                right = s.charAt(--j);
             }
 
             if(Character.isDigit(left) && Character.isDigit(right) && left == right ||
