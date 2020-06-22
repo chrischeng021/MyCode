@@ -19,9 +19,9 @@ public class ArrayUtils {
         int[] res = new int[resSize];
         int index = 0;
         for (int i = 0; (i * 2 + 1) < nums.length; i++) {
-            int frequence = nums[2 * i];
+            int frequency = nums[2 * i];
             int val = nums[2 * i + 1];
-            for (; frequence > 0; index++, frequence--) {
+            for (; frequency > 0; index++, frequency--) {
                 res[index] = val;
             }
         }
@@ -42,5 +42,59 @@ public class ArrayUtils {
             }
         }
         return ret;
+    }
+
+    // 给你两个整数，n 和 start 。
+    // 数组 nums 定义为：nums[i] = start + 2*i（下标从 0 开始）且 n == nums.length 。
+    // 请返回 nums 中所有元素按位异或（XOR）后得到的结果。
+    // 链接：https://leetcode-cn.com/problems/xor-operation-in-an-array
+    public int xorOperation(int n, int start) {
+        int []nums = new int[n];
+        int ret = 0;
+        for(int i = 0; i < n; i++)
+        {
+            ret ^= start + 2*i;
+        }
+        return ret;
+    }
+
+    // 桌上有 n 堆力扣币，每堆的数量保存在数组 coins 中。我们每次可以选择任意一堆，拿走其中的一枚或者两枚，求拿完所有力扣币的最少次数。
+    // 链接：https://leetcode-cn.com/problems/na-ying-bi/
+    public int minCount(int[] coins) {
+        int res = 0;
+        for(int i = 0; i < coins.length; i++){
+            res += (coins[i] + 1) / 2;
+        }
+        return res;
+    }
+
+    // 一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+    // 链接：https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof
+    public int missingNumber(int[] nums) {
+        int shouldSum = (nums.length + 1) * nums.length/2;
+        for(int i = 0; i < nums.length; i++){
+            shouldSum -= nums[i];
+        }
+
+        return shouldSum;
+    }
+
+    // 给定一个未经排序的整数数组，找到最长且连续的的递增序列，并返回该序列的长度。
+    public int findLengthOfLCIS(int[] nums) {
+        int globalMaxLength = -1;
+        int curMaxLength = 1;
+        if(nums.length < 2){
+            return nums.length;
+        }
+        for(int i = 1; i < nums.length - 1; i++){
+            if(nums[i] > nums[i - 1]){
+                curMaxLength++;
+            }
+            else{
+                globalMaxLength = globalMaxLength < curMaxLength ? curMaxLength : globalMaxLength;
+                curMaxLength = 1;
+            }
+        }
+        return Math.max(globalMaxLength, curMaxLength);
     }
 }
