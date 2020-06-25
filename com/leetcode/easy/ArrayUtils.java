@@ -50,9 +50,8 @@ public class ArrayUtils {
     // 链接：https://leetcode-cn.com/problems/xor-operation-in-an-array
     public int xorOperation(int n, int start) {
         int ret = 0;
-        for(int i = 0; i < n; i++)
-        {
-            ret ^= start + 2*i;
+        for (int i = 0; i < n; i++) {
+            ret ^= start + 2 * i;
         }
         return ret;
     }
@@ -61,7 +60,7 @@ public class ArrayUtils {
     // 链接：https://leetcode-cn.com/problems/na-ying-bi/
     public int minCount(int[] coins) {
         int res = 0;
-        for(int i = 0; i < coins.length; i++){
+        for (int i = 0; i < coins.length; i++) {
             res += (coins[i] + 1) / 2;
         }
         return res;
@@ -70,8 +69,8 @@ public class ArrayUtils {
     // 一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
     // 链接：https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof
     public int missingNumber(int[] nums) {
-        int shouldSum = (nums.length + 1) * nums.length/2;
-        for(int i = 0; i < nums.length; i++){
+        int shouldSum = (nums.length + 1) * nums.length / 2;
+        for (int i = 0; i < nums.length; i++) {
             shouldSum -= nums[i];
         }
 
@@ -82,14 +81,13 @@ public class ArrayUtils {
     public int findLengthOfLCIS(int[] nums) {
         int globalMaxLength = -1;
         int curMaxLength = 1;
-        if(nums.length < 2){
+        if (nums.length < 2) {
             return nums.length;
         }
-        for(int i = 1; i < nums.length - 1; i++){
-            if(nums[i] > nums[i - 1]){
+        for (int i = 1; i < nums.length - 1; i++) {
+            if (nums[i] > nums[i - 1]) {
                 curMaxLength++;
-            }
-            else{
+            } else {
                 globalMaxLength = globalMaxLength < curMaxLength ? curMaxLength : globalMaxLength;
                 curMaxLength = 1;
             }
@@ -101,19 +99,19 @@ public class ArrayUtils {
     // 完成所有替换操作后，请你返回这个数组。
     // 链接：https://leetcode-cn.com/problems/replace-elements-with-greatest-element-on-right-side/
     public static int[] replaceElements(int[] arr) {
-        if(arr.length == 1){
-            return new int[]{-1};
+        if (arr.length == 1) {
+            return new int[] { -1 };
         }
 
-        if(arr.length == 0){
+        if (arr.length == 0) {
             return arr;
         }
 
         int maxRight = arr[arr.length - 1];
         arr[arr.length - 1] = -1;
-        for(int i = arr.length - 2; i >= 0; i--){
+        for (int i = arr.length - 2; i >= 0; i--) {
             int curRightMax = maxRight;
-            if(arr[i] > maxRight){
+            if (arr[i] > maxRight) {
                 maxRight = arr[i];
             }
             arr[i] = curRightMax;
@@ -126,17 +124,17 @@ public class ArrayUtils {
         int[] letterMap = new int[26];
         int res = 0;
 
-        for(int i = 0; i < chars.length(); i++){
+        for (int i = 0; i < chars.length(); i++) {
             letterMap[chars.charAt(i) - 'a'] += 1;
         }
 
-        for(String str : words){
-            int [] wordMap = new int[26];
-            for(int i = 0; i < str.length(); i++){
+        for (String str : words) {
+            int[] wordMap = new int[26];
+            for (int i = 0; i < str.length(); i++) {
                 wordMap[str.charAt(i) - 'a'] += 1;
             }
 
-            if(this.isContained(letterMap, wordMap)){
+            if (this.isContained(letterMap, wordMap)) {
                 res += str.length();
             }
         }
@@ -144,31 +142,33 @@ public class ArrayUtils {
         return res;
     }
 
-    private boolean isContained(int[]source, int[]target){
-        for(int i = 0; i < source.length; i++){
-            if(source[i] < target[i]){
+    private boolean isContained(int[] source, int[] target) {
+        for (int i = 0; i < source.length; i++) {
+            if (source[i] < target[i]) {
                 return false;
             }
         }
         return true;
     }
+
     /*
-     *在歌曲列表中，第 i 首歌曲的持续时间为 time[i] 秒
-     *返回其总持续时间（以秒为单位）可被 60 整除的歌曲对的数量。形式上，我们希望索引的数字 i 和 j 满足  i < j 且有 (time[i] + time[j]) % 60 == 0。
-     *链接：https://leetcode-cn.com/problems/pairs-of-songs-with-total-durations-divisible-by-60
-    */
+     * 在歌曲列表中，第 i 首歌曲的持续时间为 time[i] 秒 返回其总持续时间（以秒为单位）可被 60 整除的歌曲对的数量。形式上，我们希望索引的数字 i
+     * 和 j 满足  i < j 且有 (time[i] + time[j]) % 60 == 0。
+     * 链接：https://leetcode-cn.com/problems/pairs-of-songs-with-total-durations-
+     * divisible-by-60
+     */
     public int numPairsDivisibleBy60(int[] time) {
         int res = 0;
         int[] remainders = new int[60];
 
-        for(int i : time){
-            remainders[i%60]++;
+        for (int i : time) {
+            remainders[i % 60]++;
         }
 
-        res += remainders[0] * (remainders[0] - 1)/2;
-        res += remainders[30] * (remainders[30] - 1)/2;
+        res += remainders[0] * (remainders[0] - 1) / 2;
+        res += remainders[30] * (remainders[30] - 1) / 2;
 
-        for(int i = 1, j = 59; i < j; i++, j--){
+        for (int i = 1, j = 59; i < j; i++, j--) {
             res += remainders[i] * remainders[j];
         }
 
@@ -180,11 +180,11 @@ public class ArrayUtils {
         int n = grid[m - 1].length;
         int sum = 0;
         int curPos = n - 1;
-        
-        for(int i = 0; i < m; i++){
+
+        for (int i = 0; i < m; i++) {
             boolean isPositiveNumExist = false;
-            for(int j = Math.min(curPos, n - 1); j >= 0; j--){
-                if(grid[i][j] >= 0){
+            for (int j = Math.min(curPos, n - 1); j >= 0; j--) {
+                if (grid[i][j] >= 0) {
                     curPos = j + 1;
                     isPositiveNumExist = true;
                     break;
@@ -192,7 +192,7 @@ public class ArrayUtils {
             }
             sum += isPositiveNumExist ? n - curPos : n;
 
-            if(!isPositiveNumExist){
+            if (!isPositiveNumExist) {
                 sum += (m - 1 - i) * n;
                 break;
             }
@@ -200,8 +200,8 @@ public class ArrayUtils {
         return sum;
     }
 
-    /* 给你一个长度固定的整数数组 arr，请你将该数组中出现的每个零都复写一遍，并将其余的元素向右平移。
-     * 注意：请不要在超过该数组长度的位置写入元素。
+    /*
+     * 给你一个长度固定的整数数组 arr，请你将该数组中出现的每个零都复写一遍，并将其余的元素向右平移。 注意：请不要在超过该数组长度的位置写入元素。
      * 要求：请对输入的数组 就地 进行上述修改，不要从函数返回任何东西。
      * 链接：https://leetcode-cn.com/problems/duplicate-zeros
      */
@@ -209,8 +209,8 @@ public class ArrayUtils {
         int lastKeepIndex = 0;
         int duplicateZeroIndex = 0;
         int length = arr.length;
-        while(duplicateZeroIndex < length){
-            if(arr[lastKeepIndex] == 0){
+        while (duplicateZeroIndex < length) {
+            if (arr[lastKeepIndex] == 0) {
                 duplicateZeroIndex++;
             }
             duplicateZeroIndex++;
@@ -231,20 +231,19 @@ public class ArrayUtils {
         }
     }
 
-
     public boolean canPlaceFlowers(int[] flowerbed, int n) {
         int supportedMax = 0;
 
-        if(n == 0){
+        if (n == 0) {
             return true;
         }
 
-        if(flowerbed.length == 0 || (flowerbed.length < 3 && flowerbed[0] == 1)){
+        if (flowerbed.length == 0 || (flowerbed.length < 3 && flowerbed[0] == 1)) {
             return false;
         }
 
-        for(int i = 0; i < flowerbed.length; i++){
-            if(this.isValidPosition(flowerbed, i)){
+        for (int i = 0; i < flowerbed.length; i++) {
+            if (this.isValidPosition(flowerbed, i)) {
                 supportedMax++;
                 flowerbed[i] = 1;
             }
@@ -252,14 +251,14 @@ public class ArrayUtils {
         return supportedMax >= n;
     }
 
-    private boolean isValidPosition(int[] flowerbed, int targetIndex){
-        if(flowerbed[targetIndex] == 1){
+    private boolean isValidPosition(int[] flowerbed, int targetIndex) {
+        if (flowerbed[targetIndex] == 1) {
             return false;
         }
-        if(targetIndex - 1 >= 0 && flowerbed[targetIndex - 1] == 1){
+        if (targetIndex - 1 >= 0 && flowerbed[targetIndex - 1] == 1) {
             return false;
         }
-        if(targetIndex + 1 < flowerbed.length && flowerbed[targetIndex + 1] == 1){
+        if (targetIndex + 1 < flowerbed.length && flowerbed[targetIndex + 1] == 1) {
             return false;
         }
         return true;
@@ -269,19 +268,23 @@ public class ArrayUtils {
         Set<Integer> numsSet = new HashSet<Integer>();
         int zeroCount = 0;
 
-        for(int i = 0; i < arr.length; i++){
+        for (int i = 0; i < arr.length; i++) {
             numsSet.add(arr[i]);
-            if(arr[i] == 0){
+            if (arr[i] == 0) {
                 zeroCount++;
             }
         }
 
-        for(int i = 0; i < arr.length; i++){
-            if(numsSet.contains(arr[i] * 2) && ((arr[i] != 0 || zeroCount > 1))){
-                    return true;
+        for (int i = 0; i < arr.length; i++) {
+            if (numsSet.contains(arr[i] * 2) && ((arr[i] != 0 || zeroCount > 1))) {
+                return true;
             }
         }
-
         return false;
+    }
+
+    // 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
+    // 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
+    public int majorityElement(int[] nums) {
     }
 }
