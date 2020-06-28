@@ -1,6 +1,8 @@
 package com.leetcode.easy;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ArrayUtils {
@@ -283,8 +285,108 @@ public class ArrayUtils {
         return false;
     }
 
-    // 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
-    // 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
+    /**
+     * 环形公交路线上有 n 个站，按次序从 0 到 n - 1 进行编号。我们已知每一对相邻公交站之间的距离，
+     * distance[i] 表示编号为 i 的车站和编号为 (i + 1) % n 的车站之间的距离。 环线上的公交车都可以按顺时针和逆时针的方向行驶。
+     * 返回乘客从出发点 start 到目的地 destination 之间的最短距离。
+     * 链接：https://leetcode-cn.com/problems/distance-between-bus-stops
+     **/
+    public int distanceBetweenBusStops(int[] distance, int start, int destination) {
+        int sumDistance = 0;
+        for (int i = 0; i < distance.length; i++) {
+            sumDistance += distance[i];
+        }
+        int min = Math.min(start, destination);
+        int max = Math.max(start, destination);
+
+        int clockDistance = 0;
+        for (int i = min; i < max; i++) {
+            clockDistance += distance[i];
+        }
+
+        return Math.min(clockDistance, sumDistance - clockDistance);
+    }
+
+    /**
+     * 给定一个整数数组和一个整数 k，判断数组中是否存在两个不同的索引 i 和 j，使得 nums [i] = nums [j]，并且 i 和 j 的差的
+     * 绝对值 至多为 k。 链接：https://leetcode-cn.com/problems/contains-duplicate-ii
+     */
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Map<Integer, HashMap<String, Integer>> map = new HashMap<Integer, HashMap<String, Integer>>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
+                if (map.get(nums[i]).get("ceil") >= i && map.get(nums[i]).get("floor") <= i) {
+                    return true;
+                }
+                int curFloor = Math.min(Math.abs(i - k), 0);
+                int curCeil = i + k;
+
+                if (map.get(nums[i]).get("ceil") < curCeil) {
+                    map.get(nums[i]).put("ceil", curCeil);
+                }
+
+                if (map.get(nums[i]).get("floor") > curFloor) {
+                    map.get(nums[i]).put("floor", curFloor);
+                }
+            } else {
+                int floor = Math.min(Math.abs(i - k), 0);
+                int ceil = i + k;
+                map.put(nums[i], new HashMap<String, Integer>() {
+                    {
+                        put("floor", floor);
+                        put("ceil", ceil);
+                    }
+                });
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 给定两个字符串 s1 和 s2，请编写一个程序，确定其中一个字符串的字符重新排列后，能否变成另一个字符串。
+     * 链接：https://leetcode-cn.com/problems/check-permutation-lcci/
+     */
+    public boolean CheckPermutation(String s1, String s2) {
+        if(s1.length() != s2.length()){
+            return false;
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < s1.length(); i++){
+            if(map.containsKey(s1.charAt(i))){
+                map.put(s1.charAt(i), map.get(s1.charAt(i)) + 1);
+            }
+            else{
+                map.put(s1.charAt(i), 1);
+            }
+
+            if(map.containsKey(s2.charAt(i))){
+                map.put(s2.charAt(i), map.get(s2.charAt(i)) - 1);
+            }
+            else{
+                map.put(s2.charAt(i), -1);
+            }
+        }
+
+        for(Map.Entry<Character, Integer> entry : map.entrySet()){
+            if(entry.getValue() != 0){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
+     * 链接：https://leetcode-cn.com/problems/non-decreasing-array/
+     * */
+    public boolean checkPossibility(int[] nums) {
+    }
+
+    /** 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
+     ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
+     **/
     public int majorityElement(int[] nums) {
     }
 }

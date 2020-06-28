@@ -1,9 +1,5 @@
 package com.leetcode;
 
-
-import com.leetcode.easy.AddBinary;
-import com.leetcode.easy.ArrayUtils;
-
 public class Solution {
     public static int hammingWeight(long n) {
         int count = 0;
@@ -17,8 +13,6 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        System.out.println("=============");
-        System.out.println(hammingWeight(11111111111111111111111111111101));
         System.out.println("=============");
     }
 }

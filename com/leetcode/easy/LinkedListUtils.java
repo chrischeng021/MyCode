@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.leetcode.model.ListNode;
 
-public class LinkedListUtil {
+public class LinkedListUtils {
     // 实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。
     // 注意：本题相对原题稍作改动
     // 链接：https://leetcode-cn.com/problems/kth-node-from-end-of-list-lcci/
