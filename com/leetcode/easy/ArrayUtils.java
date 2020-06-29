@@ -1,9 +1,6 @@
 package com.leetcode.easy;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ArrayUtils {
     // 给你一个以行程长度编码压缩的整数列表 nums 。
@@ -382,11 +379,35 @@ public class ArrayUtils {
      * 链接：https://leetcode-cn.com/problems/non-decreasing-array/
      * */
     public boolean checkPossibility(int[] nums) {
+        return false;
     }
 
     /** 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
      ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
      **/
     public int majorityElement(int[] nums) {
+        return 0;
+    }
+
+    static Comparator<Integer> cmp = new Comparator<Integer>() {
+        public int compare(Integer e1, Integer e2) {
+            return e1 - e2;
+        }
+    };
+
+    public static int findKthLargest(int[] nums, int k) {
+        Queue<Integer> maxK = new PriorityQueue<>(k);
+        for(int num : nums)
+        {
+            if(maxK.size() == k && num > maxK.peek()){
+                maxK.poll();
+                maxK.add(num);
+            }
+            else if(maxK.size() < k) {
+                maxK.add(num);
+            }
+        }
+
+        return maxK.peek();
     }
 }

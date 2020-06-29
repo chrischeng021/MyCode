@@ -1,5 +1,7 @@
 package com.leetcode;
 
+import com.leetcode.easy.ArrayUtils;
+
 public class Solution {
     public static int hammingWeight(long n) {
         int count = 0;
@@ -13,6 +15,6 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        System.out.println("=============");
+        System.out.println(ArrayUtils.findKthLargest(new int[]{3,2,1,5,6,4}, 2));
     }
 }
