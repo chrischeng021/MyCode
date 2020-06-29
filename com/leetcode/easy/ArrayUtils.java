@@ -1,7 +1,9 @@
 package com.leetcode.easy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -388,5 +390,45 @@ public class ArrayUtils {
      ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
      **/
     public int majorityElement(int[] nums) {
+    }
+
+    /**
+     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+     * 链接：https://leetcode-cn.com/problems/find-common-characters
+    */
+    public List<String> commonChars(String[] A) {
+        HashMap<Character, HashMap<String, Integer>> map = new HashMap<Character, HashMap<String, Integer>>();
+        List<String> list = new ArrayList<String>();
+
+        String initWord = A[0];
+
+        for(int i = 0; i < initWord.length(); i++){
+            char ch = initWord.charAt(i);
+            if(map.containsKey(ch)){
+                map.get(ch).put("AllFrequency", map.get(ch).get("map.get(ch)") + 1);
+            }
+            else{
+                map.put(initWord.charAt(i), new HashMap<String, Integer>(){
+                    {
+                        put("WordFrequency", 1);
+                        put("AllFrequency", 1);
+                    }
+                });
+            }
+        }
+
+        for(Map.Entry<Character, HashMap<String, Integer>> entry : map.entrySet()){
+            if(entry.getValue().get("WordFrequency") != A.length){
+                continue;
+            }
+            else{
+                int times = entry.getValue().get("AllFrequency") / A.length;
+                while(times-- > 0){
+                    list.add(String.valueOf(entry.getKey()));
+                }
+            }
+        }
+
+        return list;
     }
 }
