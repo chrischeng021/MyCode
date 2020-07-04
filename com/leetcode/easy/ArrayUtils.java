@@ -410,4 +410,132 @@ public class ArrayUtils {
 
         return maxK.peek();
     }
+
+    /**
+     * 给定由若干 0 和 1 组成的数组 A。我们定义 N_i：从 A[0] 到 A[i] 的第 i 个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
+     * 返回布尔值列表 answer，只有当 N_i 可以被 5 整除时，答案 answer[i] 为 true，否则为 false。
+     * 链接：https://leetcode-cn.com/problems/binary-prefix-divisible-by-5
+     * */
+    public static List<Boolean> prefixesDivBy5(int[] A) {
+        Boolean[] arr = new Boolean[A.length];
+        int remainder = 0;
+
+        for(int i = 0; i < A.length; i++){
+            remainder = ((remainder << 1) + A[i]) % 5;
+            arr[i] = remainder == 0;
+        }
+
+        return Arrays.asList(arr);
+    }
+
+    public String dayOfTheWeek(int day, int month, int year) {
+        return "";
+    }
+
+    /**
+     * 给你一个区间列表，请你删除列表中被其他区间所覆盖的区间。
+     * 只有当 c <= a 且 b <= d 时，我们才认为区间 [a,b) 被区间 [c,d) 覆盖。
+     * 在完成所有删除操作后，请你返回列表中剩余区间的数目。
+     * 链接：https://leetcode-cn.com/problems/remove-covered-intervals
+     * */
+    public static int removeCoveredIntervals(int[][] intervals) {
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t1, int[] t2) {
+                return t1[0] == t2[0] ? t2[1] - t1[1] : t1[0] - t2[0];
+            }
+        });
+
+        int begin = intervals[0][0];
+        int end = intervals[0][1];
+
+        int num = 1;
+
+        for(int i = 1; i < intervals.length; i++){
+            if(intervals[i][0] >= begin && intervals[i][1] <= end){
+                continue;
+            }
+            num++;
+            begin = intervals[i][0];
+            end = intervals[i][1];
+        }
+
+        return num;
+    }
+
+
+    /**
+     * 对于字符串 S 和 T，只有在 S = T + ... + T（T 与自身连接 1 次或多次）时，我们才认定 “T 能除尽 S”。
+     * 返回最长字符串 X，要求满足 X 能除尽 str1 且 X 能除尽 str2。
+     * 链接：https://leetcode-cn.com/problems/greatest-common-divisor-of-strings
+     * */
+    private int gcd(int m, int n){
+        if(n == 0) {
+            return m;
+        }
+        else{
+            return gcd(n, m%n);
+        }
+    }
+    public String gcdOfStrings(String str1, String str2) {
+        if(!(str1 + str2).equals(str2 + str1)){
+            return "";
+        }
+        return str1.substring(0, this.gcd(str1.length(), str2.length()));
+    }
+
+//    public int lastRemaining(int n, int m) {
+//        int removedCount = 0;
+//        int curLength = n;
+//        while(removedCount < n  -1){
+//
+//        }
+//    }
+
+    /**
+     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+     * 链接：https://leetcode-cn.com/problems/find-common-characters
+     * */
+    public static List<String> commonChars(String[] A) {
+        int[] wordMinFrequency = new int[26];
+        int[] wordFrequency = new int[26];
+
+        for(String word : A){
+            boolean[] isWordFrequencyUpdated = new boolean[26];
+            HashMap<Character, Integer> curLetterMap = new HashMap<Character, Integer>();
+            for(int i = 0; i < word.length(); i++){
+                int index = word.charAt(i) - 'a';
+                if(!isWordFrequencyUpdated[index]){
+                    isWordFrequencyUpdated[index] = true;
+                    wordFrequency[index]++;
+                }
+                if(curLetterMap.containsKey(word.charAt(i))){
+                    curLetterMap.put(word.charAt(i), curLetterMap.get(word.charAt(i)) + 1);
+                }
+                else{
+                    curLetterMap.put(word.charAt(i), 1);
+                }
+            }
+            for(int i = 0; i < 26; i++){
+                if(curLetterMap.containsKey((char)('a' + i))){
+                    if(wordMinFrequency[i] == 0){
+                        wordMinFrequency[i] = curLetterMap.get((char)('a' + i));
+                    }
+                    else{
+                        wordMinFrequency[i] = Math.min(curLetterMap.get((char)('a' + i)), wordMinFrequency[i]);
+                    }
+                }
+            }
+        }
+
+        List<String> retList = new ArrayList<String>();
+        for(int i = 0; i < 26; i++){
+            if(wordFrequency[i] == A.length){
+                for(int j = 0 ; j < wordMinFrequency[i]; j++){
+                    retList.add(String.valueOf((char)('a' + i)));
+                }
+            }
+        }
+        return retList;
+    }
 }
