@@ -380,17 +380,43 @@ public class ArrayUtils {
         return true;
     }
 
-    /**
-     * 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
-     * 链接：https://leetcode-cn.com/problems/non-decreasing-array/
-     * */
-    public boolean checkPossibility(int[] nums) {
-    }
-
     /** 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
      ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
      **/
     public int majorityElement(int[] nums) {
+        if(nums.length == 0){
+            return -1;
+        }
+
+        int count = 1;
+        int curMain = nums[0];
+
+        if(nums.length == 1){
+            return curMain;
+        }
+
+        for(int i = 1; i < nums.length; i++){
+            if(nums[i] == curMain){
+                count++;
+                continue;
+            }
+            if(count == 0){
+                curMain = nums[i];
+                count = 1;
+            }
+            else{
+                count--;
+            }
+        }
+
+        count = 0;
+        for(int num : nums){
+            if(num == curMain){
+                count++;
+            }
+        }
+
+        return count*2 >= nums.length ? curMain : -1;
     }
 
     /**
@@ -538,5 +564,47 @@ public class ArrayUtils {
         }
 
         return ret;
+    }
+
+    // 你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+    // 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+    // 链接：https://leetcode-cn.com/problems/house-robber
+    // 注：递归解法会超时/爆栈，提交时还是只能用动态规划
+    // public int rob(int[] nums) {
+    //     return rob(nums, nums.length);
+    // }
+    // private int rob(int[]nums, int len){
+    //     if(len == 0){
+    //         return 0;
+    //     }
+    //     else if(len == 1){
+    //         return nums[0];
+    //     }
+    //     else if(len == 2){
+    //         return Math.max(nums[0], nums[1]);
+    //     }
+    //     else{
+    //         return Math.max(rob(nums, len - 1), rob(nums, len - 2) +  nums[len - 1]);
+    //     }
+    // }
+    public static int rob(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        if(nums.length == 1){
+            return nums[0];
+        }
+        if(nums.length == 2){
+            return Math.max(nums[0], nums[1]);
+        }
+        int[] dp = new int[nums.length + 1];
+        dp[0] = 0;
+        dp[1] = nums[0];
+        dp[2] = Math.max(nums[0], nums[1]);
+        for(int i = 3; i < nums.length; i++){
+            dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+        }
+
+        return dp[nums.length - 1];
     }
 }

@@ -19,5 +19,6 @@ public class Solution {
     }
     
     public static void main(String[] args) {
+        System.out.println(ArrayUtils.rob(new int[]{2,7,9,3,1}));
     }
 }
