@@ -1,6 +1,7 @@
 package com.leetcode.easy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -379,19 +380,43 @@ public class ArrayUtils {
         return true;
     }
 
-    /**
-     * 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
-     * 链接：https://leetcode-cn.com/problems/non-decreasing-array/
-     * */
-    public boolean checkPossibility(int[] nums) {
-        return false;
-    }
-
     /** 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
      ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
      **/
     public int majorityElement(int[] nums) {
-        return 0;
+        if(nums.length == 0){
+            return -1;
+        }
+
+        int count = 1;
+        int curMain = nums[0];
+
+        if(nums.length == 1){
+            return curMain;
+        }
+
+        for(int i = 1; i < nums.length; i++){
+            if(nums[i] == curMain){
+                count++;
+                continue;
+            }
+            if(count == 0){
+                curMain = nums[i];
+                count = 1;
+            }
+            else{
+                count--;
+            }
+        }
+
+        count = 0;
+        for(int num : nums){
+            if(num == curMain){
+                count++;
+            }
+        }
+
+        return count*2 >= nums.length ? curMain : -1;
     }
 
     /**
@@ -399,40 +424,188 @@ public class ArrayUtils {
      * 例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
      * 链接：https://leetcode-cn.com/problems/find-common-characters
     */
-    public List<String> commonChars(String[] A) {
-        HashMap<Character, HashMap<String, Integer>> map = new HashMap<Character, HashMap<String, Integer>>();
-        List<String> list = new ArrayList<String>();
+    public static List<String> commonChars(String[] A) {
+        int[] wordMinFrequency = new int[26];
+        int[] wordFrequency = new int[26];
 
-        String initWord = A[0];
-
-        for(int i = 0; i < initWord.length(); i++){
-            char ch = initWord.charAt(i);
-            if(map.containsKey(ch)){
-                map.get(ch).put("AllFrequency", map.get(ch).get("map.get(ch)") + 1);
+        for(String word : A){
+            boolean[] isWordFrequencyUpdated = new boolean[26];
+            HashMap<Character, Integer> curLetterMap = new HashMap<Character, Integer>();
+            for(int i = 0; i < word.length(); i++){
+                int index = word.charAt(i) - 'a';
+                if(!isWordFrequencyUpdated[index]){
+                    isWordFrequencyUpdated[index] = true;
+                    wordFrequency[index]++;
+                }
+                if(curLetterMap.containsKey(word.charAt(i))){
+                    curLetterMap.put(word.charAt(i), curLetterMap.get(word.charAt(i)) + 1);
+                }
+                else{
+                    curLetterMap.put(word.charAt(i), 1);
+                }
             }
-            else{
-                map.put(initWord.charAt(i), new HashMap<String, Integer>(){
-                    {
-                        put("WordFrequency", 1);
-                        put("AllFrequency", 1);
+            for(int i = 0; i < 26; i++){
+                if(curLetterMap.containsKey((char)('a' + i))){
+                    if(wordMinFrequency[i] == 0){
+                        wordMinFrequency[i] = curLetterMap.get((char)('a' + i));
                     }
-                });
-            }
-        }
-
-        for(Map.Entry<Character, HashMap<String, Integer>> entry : map.entrySet()){
-            if(entry.getValue().get("WordFrequency") != A.length){
-                continue;
-            }
-            else{
-                int times = entry.getValue().get("AllFrequency") / A.length;
-                while(times-- > 0){
-                    list.add(String.valueOf(entry.getKey()));
+                    else{
+                        wordMinFrequency[i] = Math.min(curLetterMap.get((char)('a' + i)), wordMinFrequency[i]);
+                    }
                 }
             }
         }
 
-        return list;
+        List<String> retList = new ArrayList<String>();
+        for(int i = 0; i < 26; i++){
+            if(wordFrequency[i] == A.length){
+                for(int j = 0 ; j < wordMinFrequency[i]; j++){
+                    retList.add(String.valueOf((char)('a' + i)));
+                }
+            }
+        }
+        return retList;
+    }
+
+    /**
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     * 你的算法时间复杂度必须是 O(log n) 级别。
+     * 如果数组中不存在目标值，返回 [-1, -1]。
+     * 链接：https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array
+     * 
+    */
+    public int binarySearch(int[] sortedArray, int target){
+        if(sortedArray.length == 0 || (sortedArray.length == 1 && sortedArray[0] != target)){
+            return -1;
+        }
+
+        int l = 0;
+        int r = sortedArray.length - 1;
+        int mid;
+
+        while(l <= r){
+            mid = (l + r)/2;
+            if(sortedArray[mid] ==  target){
+                return mid;
+            }
+            else if(sortedArray[mid] < target){
+                l = mid + 1;
+                continue;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        int targetIndex = this.binarySearch(nums, target);
+        int[] ret = new int[]{-1, -1};
+
+        if(targetIndex == -1){
+            return ret;
+        }
+
+        int right = targetIndex;
+        int left = targetIndex;
+
+        while(right < nums.length && nums[right] == target){
+            ret[1] = right++;
+        }
+        while(left >= 0 && nums[left] == target){
+            ret[0] = left--;
+        }
+        
+        return ret;
+    }
+
+    public static int calculateMinLetterFrequency(String word){
+        int[] arr = new int[26];
+        for(int i = 0; i < word.length(); i++){
+            arr[word.charAt(i) - 'a'] += 1;
+        }
+
+        for(int i = 0; i < 26; i++){
+            if(arr[i] != 0){
+                return arr[i];
+            }
+        }
+
+        return 0;
+    }
+
+    public static int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] wordValArr = new int[words.length];
+
+        int[] ret = new int[queries.length];
+        
+        for(int i = 0; i < words.length; i++){
+            wordValArr[i] = calculateMinLetterFrequency(words[i]);
+        }
+
+        Arrays.sort(wordValArr);
+        HashMap<Integer, Integer> cache = new HashMap<>();
+
+        for(int i = 0; i < queries.length; i++){
+            int queryVal = calculateMinLetterFrequency(queries[i]);
+
+            if(cache.containsKey(queryVal)){
+                ret[i] = cache.get(queryVal);
+            }
+            else{
+                int j = wordValArr.length - 1;
+                while(j >= 0 && wordValArr[j] > queryVal){
+                    j--;
+                }
+                ret[i] = wordValArr.length - j - 1;
+                cache.put(queryVal, ret[i]);
+            }
+        }
+
+        return ret;
+    }
+
+    // 你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+    // 给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+    // 链接：https://leetcode-cn.com/problems/house-robber
+    // 注：递归解法会超时/爆栈，提交时还是只能用动态规划
+    // public int rob(int[] nums) {
+    //     return rob(nums, nums.length);
+    // }
+    // private int rob(int[]nums, int len){
+    //     if(len == 0){
+    //         return 0;
+    //     }
+    //     else if(len == 1){
+    //         return nums[0];
+    //     }
+    //     else if(len == 2){
+    //         return Math.max(nums[0], nums[1]);
+    //     }
+    //     else{
+    //         return Math.max(rob(nums, len - 1), rob(nums, len - 2) +  nums[len - 1]);
+    //     }
+    // }
+    public static int rob(int[] nums) {
+        if(nums.length == 0){
+            return 0;
+        }
+        if(nums.length == 1){
+            return nums[0];
+        }
+        if(nums.length == 2){
+            return Math.max(nums[0], nums[1]);
+        }
+        int[] dp = new int[nums.length + 1];
+        dp[0] = 0;
+        dp[1] = nums[0];
+        dp[2] = Math.max(nums[0], nums[1]);
+        for(int i = 3; i < nums.length; i++){
+            dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
+        }
+
+        return dp[nums.length - 1];
     }
 
     /*
@@ -440,12 +613,43 @@ public class ArrayUtils {
      * 请注意，它是排序后的第 k 小元素，而不是第 k 个不同的元素。
      * Link: https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/
     */
-    public static int kthSmallest(int[][] matrix, int k) {
-        int columns = matrix[0].length;
+    public int kthSmallest(int[][] matrix, int k) {
+        int arrNum = matrix.length;
+        if(arrNum == 1){
+            return matrix[0][k - 1];
+        }
+        int []mergedArr = matrix[0];
 
-        int targetRow = k % columns == 0 ? (k/columns) - 1 : k/columns;
-        int targetColumn = k - targetRow * columns - 1;
+        for(int i = 1; i < arrNum; i++){
+            mergedArr = this.mergeSortedArray(mergedArr, matrix[i]);
+        }
 
-        return matrix[targetRow][targetColumn];
+        return mergedArr[k - 1];
+    }
+
+    /**
+     * 合并两个有序数组
+     * */
+    private int[] mergeSortedArray(int[]a, int[]b){
+        int[] ret = new int[a.length + b.length];
+        int i = 0;
+        int j = 0;
+        int index = 0;
+        while(i < a.length && j < b.length){
+            if(a[i] <= b[j]){
+                ret[index++] = a[i++];
+                continue;
+            }
+            if(a[i] > b[j]){
+                ret[index++] = b[j++];
+            }
+        }
+        while(i < a.length){
+            ret[index++] = a[i++];
+        }
+        while(j < b.length){
+            ret[index++] = b[j++];
+        }
+        return ret;
     }
 }

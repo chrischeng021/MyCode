@@ -1,7 +1,8 @@
-package com.leetcode.easy;
+package com.leetcode;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import com.leetcode.model.ListNode;
 
@@ -210,7 +211,143 @@ public class LinkedListUtils {
         }
         return cur;
     }
+    
+    // 反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+    // 链接：https://leetcode-cn.com/problems/reverse-linked-list-ii/
+    // Sample: 
+    // 输入: 1->2->3->4->5->NULL, m = 2, n = 4
+    // 输出: 1->4->3->2->5->NULL
+    public static ListNode reverseBetween(ListNode head, int m, int n) {
+        if(m == n){
+            return head;
+        }
+        int length = n - m + 1;// 待翻转的结点个数
+        int curIndex = 1;
+        ListNode preNode = head; // 第一个需要翻转的结点
+        ListNode startNode = null; // 第一个需要翻转的结点的前结点
 
+        while(curIndex < m){
+            startNode = preNode;
+            preNode = preNode.next;
+            curIndex++;
+        }
+        ListNode nxtNode = preNode.next;
+        for(int i = 1; i < length; i++){
+            ListNode trdNode = nxtNode.next;
+            nxtNode.next = preNode;
+            preNode = nxtNode;
+            nxtNode = trdNode;
+        }
+
+        if(startNode ==  null){
+            head.next = nxtNode;
+            return preNode;
+        }
+        else{
+            startNode.next.next = nxtNode;
+            startNode.next = preNode;
+            return head;
+        }
+    }
+
+    // 给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
+    // 你可以假设除了数字 0 之外，这两个数字都不会以零开头。
+    // 链接：https://leetcode-cn.com/problems/add-two-numbers-ii
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<Integer> a = new Stack<Integer>();
+        Stack<Integer> b = new Stack<Integer>();
+
+        while(l1 != null){
+            a.push(l1.val);
+            l1 = l1.next;
+        }
+
+        while(l2 != null){
+            b.push(l2.val);
+            l2 = l2.next;
+        }
+
+        int cap = 0;
+        ListNode head = null;
+        while(!a.isEmpty() && !b.isEmpty()){
+            int sum = a.pop() + b.pop() + cap;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+
+            if(head == null){
+                head = new ListNode(sum);
+            }
+            else{
+                ListNode newHead = new ListNode(sum);
+                newHead.next = head;
+                head = newHead;
+            }
+        }
+
+        while(!a.isEmpty()){
+            int sum = a.pop() + cap;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+
+            if(head == null){
+                head = new ListNode(sum);
+            }
+            else{
+                ListNode newHead = new ListNode(sum);
+                newHead.next = head;
+                head = newHead;
+            }
+        }
+
+        while(!b.isEmpty()){
+            int sum = b.pop() + cap;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+
+            if(head == null){
+                head = new ListNode(sum);
+            }
+            else{
+                ListNode newHead = new ListNode(sum);
+                newHead.next = head;
+                head = newHead;
+            }
+        }
+
+        if(cap == 1){
+            ListNode newHead = new ListNode(cap);
+            newHead.next = head;
+            head = newHead;
+        }
+
+        return head;
+    }
+
+    // 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    // 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 
+    // 如果 pos 是 -1，则在该链表中没有环。
+    // 链接：https://leetcode-cn.com/problems/linked-list-cycle-ii
+    public ListNode detectCycle(ListNode head) {
+        if(head == null || head.next == null){
+            return null;
+        }   
+        ListNode slow = head.next;
+        ListNode fast = head.next.next;
+
+        while(slow != fast){
+            if(fast == null || fast.next == null){
+                return null;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        fast = head;
+        while(fast != slow){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return fast;
+    }
     // 获取指定链表长度
     private static int getListLength(ListNode head) {
         ListNode cur = head;

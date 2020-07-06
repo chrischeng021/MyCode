@@ -1,20 +1,20 @@
 package com.leetcode;
-
-import com.leetcode.easy.ArrayUtils;
-
+import java.util.List;
 public class Solution {
-    public static int hammingWeight(long n) {
-        int count = 0;
-        while(n > 0){
-            if(n % 2 == 1){
-                count++;
-            }
-            n = n >> 1;
+    public static void printArray(int[] arr){
+        for(int num : arr){
+            System.out.print(num + " ");
         }
-        return count;
+        System.out.println();
+    }
+
+    public static void printList(List<Integer> list){
+        for(int num : list){
+            System.out.print(num + " ");
+        }
+        System.out.println();
     }
     
-    public static void main(String[] args) {
-        System.out.println(ArrayUtils.kthSmallest(new int[][]{{-5}}, 1));
+    public static void main(String[] args) {;
     }
 }
