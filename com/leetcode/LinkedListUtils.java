@@ -348,6 +348,80 @@ public class LinkedListUtils {
         }
         return fast;
     }
+
+    // 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+    // 链接：https://leetcode-cn.com/problems/merge-two-sorted-lists/
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode head = null;
+        ListNode tail = null;
+
+        while(l1 != null && l2 != null){
+            int val;
+            if(l1.val <= l2.val){
+                val = l1.val;
+                l1 = l1.next;
+            }
+            else{
+                val = l2.val;
+                l2 = l2.next;
+            }
+            if(head == null){
+                head = new ListNode(val);
+                head.next = tail;
+                continue;
+            }
+            if(tail == null){
+                tail = new ListNode(val);
+                head.next = tail;
+            }
+            else{
+                ListNode newNode = new ListNode(val);
+                tail.next = newNode;
+                tail = newNode;
+            }
+        }
+
+        while(l1 != null){
+            if(head == null){
+                head = new ListNode(l1.val);
+                head.next = tail;
+                l1 = l1.next;
+                continue;
+            }
+            if(tail == null){
+                tail = new ListNode(l1.val);
+                head.next = tail;
+            }
+            else{
+                ListNode newNode = new ListNode(l1.val);
+                tail.next = newNode;
+                tail = newNode;
+            }
+            l1 = l1.next;
+        }
+
+        while(l2 != null){
+            if(head == null){
+                head = new ListNode(l2.val);
+                head.next = tail;
+                l2 = l2.next;
+                continue;
+            }
+            if(tail == null){
+                tail = new ListNode(l2.val);
+                head.next = tail;
+            }
+            else{
+                ListNode newNode = new ListNode(l2.val);
+                tail.next = newNode;
+                tail = newNode;
+            }
+            l2 = l2.next;
+        }
+
+        return head;
+    }
+
     // 获取指定链表长度
     private static int getListLength(ListNode head) {
         ListNode cur = head;
