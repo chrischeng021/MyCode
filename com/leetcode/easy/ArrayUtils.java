@@ -384,16 +384,19 @@ public class ArrayUtils {
      * 链接：https://leetcode-cn.com/problems/non-decreasing-array/
      * */
     public boolean checkPossibility(int[] nums) {
+        return false;
     }
 
     /** 数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
      ** 链接：https://leetcode-cn.com/problems/find-majority-element-lcci/
      **/
     public int majorityElement(int[] nums) {
+        return 0;
     }
 
     /**
-     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。
+     * 例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
      * 链接：https://leetcode-cn.com/problems/find-common-characters
     */
     public List<String> commonChars(String[] A) {
@@ -430,5 +433,19 @@ public class ArrayUtils {
         }
 
         return list;
+    }
+
+    /*
+     * 给定一个 n x n 矩阵，其中每行和每列元素均按升序排序，找到矩阵中第 k 小的元素。
+     * 请注意，它是排序后的第 k 小元素，而不是第 k 个不同的元素。
+     * Link: https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/
+    */
+    public static int kthSmallest(int[][] matrix, int k) {
+        int columns = matrix[0].length;
+
+        int targetRow = k % columns == 0 ? (k/columns) - 1 : k/columns;
+        int targetColumn = k - targetRow * columns - 1;
+
+        return matrix[targetRow][targetColumn];
     }
 }
