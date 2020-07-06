@@ -1,9 +1,13 @@
 package com.leetcode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.leetcode.easy.MaxStack;
 public class Solution {
-    public static void printArray(int[] arr){
-        for(int num : arr){
-            System.out.print(num + " ");
+    public static void printArray(Object[] arr){
+        for(Object val : arr){
+            System.out.print(val.toString() + " ");
         }
         System.out.println();
     }
@@ -14,21 +18,11 @@ public class Solution {
         }
         System.out.println();
     }
-    public static int numWays(int n) {
-        if(n < 2){
-            return 1;
-        }
-        int[] dp = new int[n + 1];
-        dp[0] = 1;
-        dp[1] = 1;
-
-        for(int i = 2; i <=n; i++){
-            dp[i] = (dp[i - 1]+ dp[i - 2]) % 1000000007;
-        }
-
-        return dp[n] % 1000000007;
-    }
     public static void main(String[] args) {
-        System.out.println(numWays(97));
+        MaxStack ms = new MaxStack();
+        ms.push(5);
+        ms.push(1);
+        ms.popMax();
+        ms.peekMax();
     }
 }
