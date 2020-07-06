@@ -1,6 +1,7 @@
 package com.leetcode.easy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -393,42 +394,149 @@ public class ArrayUtils {
     }
 
     /**
-     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+     * 给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。
+     * 例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
      * 链接：https://leetcode-cn.com/problems/find-common-characters
     */
-    public List<String> commonChars(String[] A) {
-        HashMap<Character, HashMap<String, Integer>> map = new HashMap<Character, HashMap<String, Integer>>();
-        List<String> list = new ArrayList<String>();
+    public static List<String> commonChars(String[] A) {
+        int[] wordMinFrequency = new int[26];
+        int[] wordFrequency = new int[26];
 
-        String initWord = A[0];
-
-        for(int i = 0; i < initWord.length(); i++){
-            char ch = initWord.charAt(i);
-            if(map.containsKey(ch)){
-                map.get(ch).put("AllFrequency", map.get(ch).get("map.get(ch)") + 1);
+        for(String word : A){
+            boolean[] isWordFrequencyUpdated = new boolean[26];
+            HashMap<Character, Integer> curLetterMap = new HashMap<Character, Integer>();
+            for(int i = 0; i < word.length(); i++){
+                int index = word.charAt(i) - 'a';
+                if(!isWordFrequencyUpdated[index]){
+                    isWordFrequencyUpdated[index] = true;
+                    wordFrequency[index]++;
+                }
+                if(curLetterMap.containsKey(word.charAt(i))){
+                    curLetterMap.put(word.charAt(i), curLetterMap.get(word.charAt(i)) + 1);
+                }
+                else{
+                    curLetterMap.put(word.charAt(i), 1);
+                }
             }
-            else{
-                map.put(initWord.charAt(i), new HashMap<String, Integer>(){
-                    {
-                        put("WordFrequency", 1);
-                        put("AllFrequency", 1);
+            for(int i = 0; i < 26; i++){
+                if(curLetterMap.containsKey((char)('a' + i))){
+                    if(wordMinFrequency[i] == 0){
+                        wordMinFrequency[i] = curLetterMap.get((char)('a' + i));
                     }
-                });
-            }
-        }
-
-        for(Map.Entry<Character, HashMap<String, Integer>> entry : map.entrySet()){
-            if(entry.getValue().get("WordFrequency") != A.length){
-                continue;
-            }
-            else{
-                int times = entry.getValue().get("AllFrequency") / A.length;
-                while(times-- > 0){
-                    list.add(String.valueOf(entry.getKey()));
+                    else{
+                        wordMinFrequency[i] = Math.min(curLetterMap.get((char)('a' + i)), wordMinFrequency[i]);
+                    }
                 }
             }
         }
 
-        return list;
+        List<String> retList = new ArrayList<String>();
+        for(int i = 0; i < 26; i++){
+            if(wordFrequency[i] == A.length){
+                for(int j = 0 ; j < wordMinFrequency[i]; j++){
+                    retList.add(String.valueOf((char)('a' + i)));
+                }
+            }
+        }
+        return retList;
+    }
+
+    /**
+     * 给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+     * 你的算法时间复杂度必须是 O(log n) 级别。
+     * 如果数组中不存在目标值，返回 [-1, -1]。
+     * 链接：https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array
+     * 
+    */
+    public int binarySearch(int[] sortedArray, int target){
+        if(sortedArray.length == 0 || (sortedArray.length == 1 && sortedArray[0] != target)){
+            return -1;
+        }
+
+        int l = 0;
+        int r = sortedArray.length - 1;
+        int mid;
+
+        while(l <= r){
+            mid = (l + r)/2;
+            if(sortedArray[mid] ==  target){
+                return mid;
+            }
+            else if(sortedArray[mid] < target){
+                l = mid + 1;
+                continue;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        int targetIndex = this.binarySearch(nums, target);
+        int[] ret = new int[]{-1, -1};
+
+        if(targetIndex == -1){
+            return ret;
+        }
+
+        int right = targetIndex;
+        int left = targetIndex;
+
+        while(right < nums.length && nums[right] == target){
+            ret[1] = right++;
+        }
+        while(left >= 0 && nums[left] == target){
+            ret[0] = left--;
+        }
+        
+        return ret;
+    }
+
+    public static int calculateMinLetterFrequency(String word){
+        int[] arr = new int[26];
+        for(int i = 0; i < word.length(); i++){
+            arr[word.charAt(i) - 'a'] += 1;
+        }
+
+        for(int i = 0; i < 26; i++){
+            if(arr[i] != 0){
+                return arr[i];
+            }
+        }
+
+        return 0;
+    }
+
+    public static int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] wordValArr = new int[words.length];
+
+        int[] ret = new int[queries.length];
+        
+        for(int i = 0; i < words.length; i++){
+            wordValArr[i] = calculateMinLetterFrequency(words[i]);
+        }
+
+        Arrays.sort(wordValArr);
+        HashMap<Integer, Integer> cache = new HashMap<>();
+
+        for(int i = 0; i < queries.length; i++){
+            int queryVal = calculateMinLetterFrequency(queries[i]);
+
+            if(cache.containsKey(queryVal)){
+                ret[i] = cache.get(queryVal);
+            }
+            else{
+                int j = wordValArr.length - 1;
+                while(j >= 0 && wordValArr[j] > queryVal){
+                    j--;
+                }
+                ret[i] = wordValArr.length - j - 1;
+                cache.put(queryVal, ret[i]);
+            }
+        }
+
+        return ret;
     }
 }
