@@ -7,6 +7,7 @@ public class StringUtils {
     // 给定一个字符串 S，返回 “反转后的” 字符串，其中不是字母的字符都保留在原地，而所有字母的位置发生反转。
     // 链接：https://leetcode-cn.com/problems/reverse-only-letters/
     public String reverseOnlyLetters(String S) {
+        
         return "";
     }
 
@@ -63,5 +64,10 @@ public class StringUtils {
     // 链接： https://leetcode-cn.com/problems/number-of-segments-in-a-string/
     public int countSegments(String s) {
         return 0;
+    }
+
+    public int romanToInt(String s) {
+        int res = 0;
+        return res;
     }
 }

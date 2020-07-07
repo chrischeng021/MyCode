@@ -12,6 +12,13 @@ public class Solution {
         System.out.println();
     }
 
+    public static void printIntArray(int[] arr){
+        for(int val : arr){
+            System.out.print(val + " ");
+        }
+        System.out.println();
+    }
+
     public static void printList(List<Integer> list){
         for(int num : list){
             System.out.print(num + " ");
@@ -19,10 +26,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        MaxStack ms = new MaxStack();
-        ms.push(5);
-        ms.push(1);
-        ms.popMax();
-        ms.peekMax();
+        printIntArray(ArrayUtils.exchange(new int[]{1,11,14}));
     }
 }
