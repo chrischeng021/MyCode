@@ -26,6 +26,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        printIntArray(ArrayUtils.exchange(new int[]{1,11,14}));
+        int[][] res = ArrayUtils.findContinuousSequence(9);
     }
 }

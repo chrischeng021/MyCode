@@ -1187,6 +1187,75 @@ public class ArrayUtils {
         return res;
     }
 
+    // 给出一个区间的集合，请合并所有重叠的区间。
+    // 链接：https://leetcode-cn.com/problems/merge-intervals/
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length <= 1){
+            return intervals;
+        }
+        List<int[]> list = new ArrayList<>();
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] t1, int[] t2) {
+                return t1[0] == t2[0] ? t1[1] - t2[1] : t1[0] - t2[0];
+            }
+        });
+        
+        int l= intervals[0][0];
+        int r= intervals[0][1];
+
+        for (int i = 1; i < intervals.length; i++){
+            if(l <= intervals[i][0] && r >= intervals[i][0]){
+                r = Math.max(intervals[i][1], r);
+                continue;
+            }
+            else{
+                list.add(new int[]{l, r});
+                l = intervals[i][0];
+                r = intervals[i][1];
+            }
+        }
+
+        int[][] res = new int[list.size() + 1][];
+        int index = 0;
+        for(int[] sub : list){
+            res[index++] = sub;
+        }
+        res[index] = new int[]{l, r};
+
+        return res;
+    }
+
+    // 输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+    // 序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+    // 链接：https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof
+    // 公式： 2x = (2m + n)(n + 1), n为长度，m为起始值 n>= 1, m >= 1
+    public static int[][] findContinuousSequence(int target) {
+        int val = target * 2;
+        List<int[]> list = new ArrayList<int[]>();
+        for(int n = 1; n < Math.sqrt(val); n++){
+            if(val % (n + 1) != 0 || ((val / (n + 1) - n) % 2 != 0)){
+                continue;
+            }
+            int m = (val / (n + 1) - n) / 2;
+            if(m == 0){
+                break;
+            }
+            int [] sub = new int[n + 1];
+            for(int j = 0; j <= n; j++){
+                sub[j] = m + j;
+            }
+            list.add(0, sub);
+        }
+
+        int[][] res = new int[list.size()][];
+        int index = 0;
+        for(int[] sub : list){
+            res[index++] = sub;
+        }
+        return res;
+    }
+
     /**
      * 合并两个有序数组
      * */
