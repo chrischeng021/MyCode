@@ -1,6 +1,7 @@
 package com.leetcode;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class ArrayUtils {
     // 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
@@ -1254,6 +1255,72 @@ public class ArrayUtils {
             res[index++] = sub;
         }
         return res;
+    }
+
+    public int[] divingBoard(int shorter, int longer, int k) {
+        if(k == 0){
+            return new int[0];
+        }
+        int[] res = new int[k];
+
+        if(shorter == longer){
+            for(int i = 1; i <= k; i++){
+                res[i - 1] = i * shorter;
+            }
+            return res;
+        }
+        else{
+            int s = k;
+            HashSet<Integer> set = new HashSet<>();
+            while(s >= 0){
+                int len = shorter * s + (k - s) * longer;
+                s--;
+                if(!set.contains(len)){
+                    set.add(len);
+                    res[k - s] = len;
+                }
+            }
+            return Arrays.copyOfRange(res, 0, set.size() + 1);
+        }
+    }
+
+    // 给你一个整数数组 nums，请你找出并返回能被三整除的元素最大和。
+    // 1 <= nums.length <= 4 * 10^4
+    // 1 <= nums[i] <= 10^4
+    // 链接：https://leetcode-cn.com/problems/greatest-sum-divisible-by-three/
+    public int maxSumDivThree(int[] nums) {
+        // 初试状态的DP数组，仅能初始化dp[0]
+        int[] dp = new int[]{0, Integer.MIN_VALUE, Integer.MIN_VALUE};
+
+        for(int num : nums){
+            int mod = num % 3;
+            int[] tempDP = new int[3];
+            for(int i = 0; i < 3; i++){
+                tempDP[i] = Math.max(dp[i], dp[(3 + i - mod) % 3] + num);
+            }
+            dp = tempDP;
+        }
+
+        return dp[0];
+    }
+
+    // 一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。
+    // 请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
+    // https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/
+    public int[] singleNumbers(int[] nums) {
+        int[] res = new int[2];
+        // Todo.
+        return res;
+    }
+
+    // 给定一个会议时间安排的数组，每个会议时间都会包括开始和结束的时间 [[s1,e1],[s2,e2],...] (si < ei)
+    // 为避免会议冲突，同时要考虑充分利用会议室资源，请你计算至少需要多少间会议室，才能满足这些会议安排。
+    // 链接：https://leetcode-cn.com/problems/meeting-rooms-ii
+    // 思路：本题可以换个解释为 求同一时间开会的最大人数，该数值等同于需要的最大会议室数量
+    // 此时，本题可以分类到上车问题
+    // 将上下车时间混合排序
+    public int minMeetingRooms(int[][] intervals) {
+        return 0;
     }
 
     /**

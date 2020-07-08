@@ -253,7 +253,7 @@ public class LinkedListUtils {
     // 给你两个 非空 链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点只存储一位数字。将这两数相加会返回一个新的链表。
     // 你可以假设除了数字 0 之外，这两个数字都不会以零开头。
     // 链接：https://leetcode-cn.com/problems/add-two-numbers-ii
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    public ListNode addTwoNumbersWithHighFromHead(ListNode l1, ListNode l2) {
         Stack<Integer> a = new Stack<Integer>();
         Stack<Integer> b = new Stack<Integer>();
 
@@ -420,6 +420,65 @@ public class LinkedListUtils {
         }
 
         return head;
+    }
+
+    // 给定两个用链表表示的整数，每个节点包含一个数位。
+    // 这些数位是反向存放的，也就是个位排在链表首部。
+    // 编写函数对这两个整数求和，并用链表形式返回结果。
+    // 链接：https://leetcode-cn.com/problems/sum-lists-lcci/
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode(0);
+        ListNode tail = null;
+
+        int cap = 0;
+        int alen = getListLength(l1);
+        int blen = getListLength(l2);
+
+        ListNode longList = Math.max(alen, blen) == alen ? l1 : l2;
+        ListNode shrtList = Math.min(alen, blen) == blen ? l2 : l1;
+
+        while(shrtList != null){
+            int sum = cap + longList.val + shrtList.val;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+
+            if(tail == null){
+                tail = new ListNode(sum);
+                head.next = tail;
+            }
+            else{
+                ListNode newNode = new ListNode(sum);
+                tail.next = newNode;
+                tail = tail.next;
+            }
+
+            shrtList = shrtList.next;
+            longList = longList.next;
+        }
+
+        while(longList != null){
+            int sum = cap + longList.val;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+
+            if(tail == null){
+                tail = new ListNode(sum);
+                head.next = tail;
+            }
+            else{
+                ListNode newNode = new ListNode(sum);
+                tail.next = newNode;
+                tail = tail.next;
+            }
+            longList = longList.next;
+        }
+
+        if(cap == 1){
+            ListNode newNode = new ListNode(cap);
+            tail.next = newNode;
+        }
+
+        return head.next;
     }
 
     // 获取指定链表长度

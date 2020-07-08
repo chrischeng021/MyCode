@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.leetcode.easy.MaxStack;
+import com.leetcode.middle.SortNumberByDicSequence;
 public class Solution {
     public static void printArray(Object[] arr){
         for(Object val : arr){
@@ -26,6 +27,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        int[][] res = ArrayUtils.findContinuousSequence(9);
+        printList(SortNumberByDicSequence.lexicalOrder(113));
     }
 }
