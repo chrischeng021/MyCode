@@ -4,6 +4,15 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class ArrayUtils {
+    private static Comparator<Integer> cmp = new Comparator<Integer>() {
+        public int compare(Integer a, Integer b) {
+            if(a == b){
+                return 0;
+            }
+            return String.valueOf(a).compareTo(String.valueOf(b));
+        }
+    };
+    
     // 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
     // 我们是这样定义一个非递减数列的： 对于数组中所有的 i (0 <= i <= n-2)，总满足 nums[i] <= nums[i + 1]。
     // 链接：https://leetcode-cn.com/problems/non-decreasing-array
@@ -1437,13 +1446,4 @@ public class ArrayUtils {
         }
         return ret;
     }
-
-    private static Comparator<Integer> cmp = new Comparator<Integer>() {
-        public int compare(Integer a, Integer b) {
-            if(a == b){
-                return 0;
-            }
-            return String.valueOf(a).compareTo(String.valueOf(b));
-        }
-    };
 }

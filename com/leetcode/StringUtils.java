@@ -148,9 +148,12 @@ public class StringUtils {
             }
             if(l == r){
                 stack.pop();
-                for(int j = 0; i < stack.size() - 1; j++){
-                    sb.insert(0, stack.pop());
+                StringBuilder temp = new StringBuilder();
+                for(int j = 0; j < (2 * r - 2); j++){
+                    temp.insert(0, stack.pop());
                 }
+                sb.append(temp);
+                stack.clear();
                 l = 0;
                 r = 0;
             }

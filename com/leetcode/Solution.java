@@ -28,6 +28,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        System.out.println(StringUtils.removeOuterParentheses("(()())(())"));
+        System.out.println(StringUtils.removeOuterParentheses("(()())(())(()(()))"));
     }
 }
