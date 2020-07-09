@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.leetcode.easy.LargestTimeByGivenDigit;
 import com.leetcode.easy.MaxStack;
 import com.leetcode.middle.SortNumberByDicSequence;
 public class Solution {
@@ -27,6 +28,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        printList(SortNumberByDicSequence.lexicalOrder(113));
+        System.out.println(StringUtils.removeOuterParentheses("(()())(())"));
     }
 }

@@ -1,6 +1,7 @@
 package com.leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.leetcode.model.TreeNode;
@@ -54,5 +55,19 @@ public class BinaryTreeUtils {
         }
 
         return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+    }
+
+    // 给定一个有序整数数组，元素各不相同且按升序排列，编写一个算法，创建一棵高度最小的二叉搜索树。
+    // 链接：https://leetcode-cn.com/problems/minimum-height-tree-lcci/
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if(nums.length == 0){
+            return null;
+        }
+        int mid = nums.length / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, mid));
+        root.right = sortedArrayToBST(Arrays.copyOfRange(nums, mid + 1, nums.length));
+
+        return root;
     }
 }

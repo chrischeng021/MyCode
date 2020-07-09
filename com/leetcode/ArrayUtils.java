@@ -1323,6 +1323,95 @@ public class ArrayUtils {
         return 0;
     }
 
+    // 分糖果问题 Easy
+    // 链接：https://leetcode-cn.com/problems/distribute-candies-to-people/
+    public int[] distributeCandies(int candies, int num_people) {
+        int n = num_people;
+        // how many people received complete gifts
+        int p = (int)(Math.sqrt(2 * candies + 0.25) - 0.5);
+        int remaining = (int)(candies - (p + 1) * p * 0.5);
+        int rows = p / n, cols = p % n;
+    
+        int[] d = new int[n];
+        for(int i = 0; i < n; ++i) {
+          // complete rows
+          d[i] = (i + 1) * rows + (int)(rows * (rows - 1) * 0.5) * n;
+          // cols in the last row
+          if (i < cols) d[i] += i + 1 + rows * n;
+        }
+        // remaining candies        
+        d[cols] += remaining;
+        return d;
+    }
+
+    // 汉诺塔问题
+    // 链接：https://leetcode-cn.com/problems/hanota-lcci/
+    public void hanota(List<Integer> A, List<Integer> B, List<Integer> C) {
+        move(A.size(), A, B, C);
+    }
+
+    private void move(int count, List<Integer> from , List<Integer> buffer, List<Integer> to){
+        if(count == 1){
+            to.add(from.get(from.size() - 1));
+            from.remove(from.size() - 1);
+        }
+        else{
+            move(count - 1, from, to, buffer);
+            to.add(from.get(from.size() - 1));
+            from.remove(from.size() - 1);
+            move(count - 1, buffer, from, to);
+        }
+    }
+
+    // 输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可。
+    // 链接：https://leetcode-cn.com/problems/he-wei-sde-liang-ge-shu-zi-lcof/
+    public int[] twoSum(int[] nums, int target) {
+        int[] res = new int[]{0,0};
+        for(int i = 0; i < nums.length && nums[i] <= target/2; i++){
+            int index = Arrays.binarySearch(nums, target - nums[i]);
+            if(index >= 0){
+                res[i] = nums[i];
+                res[1] = nums[index];
+                break;
+            }
+        }
+        return res;
+    }
+
+    // 给你一个整数数组 A 和一个整数 K，请在该数组中找出两个元素，使它们的和小于 K 但尽可能地接近 K，返回这两个元素的和。
+    // 如不存在这样的两个元素，请返回 -1。
+    // 链接：https://leetcode-cn.com/problems/two-sum-less-than-k
+    public int twoSumLessThanK(int[] A, int K) {
+        int ans = -1;
+        int l = 0;
+        int r;
+        Arrays.sort(A);
+        for(; l < A.length; l++){
+            r = A.length - 1;
+            while(r > l && (A[l] + A[r]) >= K){
+                r--;
+            }
+            if(r > l){
+                ans = Math.max(ans, A[l] + A[r]);
+            }
+        }
+        return ans;
+    }
+
+    // 设计一个算法，找出数组中最小的k个数。以任意顺序返回这k个数均可。
+    // 链接：https://leetcode-cn.com/problems/smallest-k-lcci/submissions/
+    public int[] smallestK(int[] arr, int k) {
+        if(k == 0 || arr.length == 0){
+            return new int[]{};
+        }
+            
+        int[] res = new int[k];
+        while(k >= 0){
+            res[res.length - k] = arr[res.length - k];
+        }
+        return res;
+    }
+
     /**
      * 合并两个有序数组
      * */
