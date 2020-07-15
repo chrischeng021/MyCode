@@ -70,4 +70,34 @@ public class BinaryTreeUtils {
 
         return root;
     }
+
+    // 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+    // 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+    // 链接：https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree
+    // 备注：效率更高的解法思路为
+    // 从根节点开始遍历树
+    // 如果节点 pp 和节点 qq 都在右子树上，那么以右孩子为根节点继续 1 的操作
+    // 如果节点 pp 和节点 qq 都在左子树上，那么以左孩子为根节点继续 1 的操作
+    // 如果条件 2 和条件 3 都不成立，这就意味着我们已经找到节 pp 和节点 qq 的 LCA 了
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null){
+            return root;
+        }
+        if(root.val <= Math.max(p.val, q.val) && root.val >= Math.min(p.val, q.val))
+        {
+            return root;
+        }
+        if(root.val <= Math.max(p.val, q.val)){
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        else{
+            return lowestCommonAncestor(root.left, p, q);
+        }
+    }
+
+    // 给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
+    // 链接：https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
+    public int kthSmallest(TreeNode root, int k) {
+        
+    }
 }

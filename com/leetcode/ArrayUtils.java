@@ -1421,6 +1421,127 @@ public class ArrayUtils {
         return res;
     }
 
+    // 两个数组的交集
+    // 链接：https://leetcode-cn.com/problems/intersection-of-two-arrays-ii/
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num : nums1){
+            if(map.containsKey(num)){
+                map.put(num, map.get(num) + 1);
+            }
+            else{
+                map.put(num, 1);
+            }
+        }
+        List<Integer> list = new ArrayList<Integer>();
+        for(int num : nums2){
+            if(map.containsKey(num)){
+                list.add(num);
+                int val = map.get(num) - 1;
+
+                if(val == 0){
+                    map.remove(num);
+                }
+                else{
+                    map.put(num, val);
+                }
+            }
+        }
+
+        return list.stream().mapToInt(i->i).toArray();
+    }
+
+    // 好数对
+    // 链接：https://leetcode-cn.com/problems/number-of-good-pairs
+    public int numIdenticalPairs(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int ans = 0;
+        for(int num : nums){
+            if(map.containsKey(num)){
+                map.put(num, map.get(num) + 1);
+            }
+            else{
+                map.put(num, 1);
+            }
+        }
+
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()){
+            if(entry.getValue() == 1){
+                continue;
+            }
+            ans += entry.getValue() * (entry.getValue() - 1)/2;
+        }
+
+        return ans;
+    }
+
+    public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+        List<Integer> list = new ArrayList<Integer>();
+        int a = 0, b = 0, c = 0;
+        while(a < arr1.length && b < arr2.length && c < arr3.length){
+            if(arr1[a] == arr2[b] && arr2[b]== arr3[c]){
+                list.add(arr1[a]);
+                a++;
+                b++;
+                c++;
+                continue;
+            }
+            if(arr1[a] == arr2[b]){
+                if(arr1[a] < arr3[c]){
+                    a++;
+                    b++;
+                }
+                else{
+                    c++;
+                }
+            }
+            else if(arr2[b] == arr3[c]){
+                if(arr1[a] < arr2[b]){
+                    a++;
+                }
+                else{
+                    b++;
+                    c++;
+                }
+            }
+            else{
+                if(arr1[a] > arr2[b]){
+                    if(arr1[a] > arr3[c]){
+                        if(arr2[b] > arr3[c]){
+                            c++;
+                        }
+                        else{
+                            b++;
+                        }
+                    }
+                    else{
+                        b++;
+                    }
+                }
+                else{
+                    if(arr1[a] > arr3[c]){
+                        if(arr1[a] > arr2[b]){
+                            if(arr2[b] > arr3[c]){
+                                c++;
+                            }
+                            else{
+                                b++;
+                            }
+                        }
+                        else{
+                            c++;
+                        }
+                    }
+                    else{
+                        a++;
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
+
     /**
      * 合并两个有序数组
      * */
