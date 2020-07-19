@@ -1,11 +1,6 @@
 package com.leetcode;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.leetcode.easy.LargestTimeByGivenDigit;
-import com.leetcode.easy.MaxStack;
-import com.leetcode.middle.SortNumberByDicSequence;
 public class Solution {
     public static void printArray(Object[] arr){
         for(Object val : arr){
@@ -28,6 +23,6 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
-        System.out.println(StringUtils.removeOuterParentheses("(()())(())(()(()))"));
+        System.out.println(ArrayUtils.longestWord(new String[]{"rac","rs","ra","on","r","otif","o","onpdu","rsf","rs","ot","oti","racy","onpd"}));
     }
 }

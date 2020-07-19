@@ -98,6 +98,6 @@ public class BinaryTreeUtils {
     // 给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
     // 链接：https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
     public int kthSmallest(TreeNode root, int k) {
-        
+        return 0;
     }
 }

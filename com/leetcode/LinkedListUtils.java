@@ -481,6 +481,47 @@ public class LinkedListUtils {
         return head.next;
     }
 
+    // 合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+    // 链接：https://leetcode-cn.com/problems/merge-k-sorted-lists/
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 1){
+            return lists[0];
+        }
+        if(lists.length == 2){
+            return mergeTwoLists(lists[0], lists[1]);
+        }
+        ListNode mergedHead = mergeTwoLists(lists[0], lists[1]);
+        for(int i = 2; i < lists.length; i++){
+            mergedHead = mergeTwoLists(mergedHead, lists[i]);
+        }
+
+        return mergedHead;
+    }
+
+    // 删除链表 M 个节点之后的 N 个节点
+    // 链接：https://leetcode-cn.com/problems/delete-n-nodes-after-m-nodes-of-a-linked-list/
+    public ListNode deleteNodes(ListNode head, int m, int n) {
+        ListNode slowPtr = head;
+        while(slowPtr != null){
+            for(int i = 1; i < m && slowPtr != null; i++){
+                slowPtr = slowPtr.next;
+            }
+            if(slowPtr == null){
+                break;
+            }
+            ListNode fastPtr = slowPtr;
+            for(int i = 0; i < n && fastPtr != null; i++){
+                fastPtr = fastPtr.next;
+            }
+            if(fastPtr == null){
+                break;
+            }
+            slowPtr.next = fastPtr.next;
+            slowPtr = fastPtr.next;
+        }
+        return head;
+    }
+
     // 获取指定链表长度
     private static int getListLength(ListNode head) {
         ListNode cur = head;
