@@ -68,6 +68,7 @@ public class LinkedListUtils {
         }
         ListNode visualHead = head;
         Set<Integer> uniqueVal = new HashSet<Integer>() {
+            private static final long serialVersionUID = 1L;
             {
                 add(head.val);
             }
@@ -579,6 +580,34 @@ public class LinkedListUtils {
     // 输入: 1->2->3->3->4->4->5
     // 输出: 1->2->5
     public ListNode deleteDuplicatesII(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode fakeHead = new ListNode(-1);
+        fakeHead.next = head;
+        ListNode baseNode = fakeHead;
+        while(baseNode.next != null){
+            ListNode cur = baseNode.next;
+            int val = cur.val;
+            boolean shouldSkip = false;
+            while(cur.next != null && cur.next.val == val){
+                cur = cur.next;
+                shouldSkip = true;
+            }
+            // 此处是重点
+            // 需要根据是否跳过当前结点决定BaseNode的指向
+            if(shouldSkip){
+                // Sample: 1->2->2->3->4 Then should be updated to 1->3->4
+                baseNode.next = cur.next;
+            }
+            else{
+                // Sample: 1->2->3->3->4 Then should be updated to 1->2->3->3->4
+                baseNode.next = cur;
+                baseNode = baseNode.next;
+            }
+        }
+
+        return fakeHead.next;
     }
 
     // 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
@@ -586,7 +615,23 @@ public class LinkedListUtils {
     // 输入: 1->1->2
     // 输出: 1->2
     public ListNode deleteDuplicatesI(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode baseNode = head;
+        
+        // 找到第一个不同值的结点
+        while(baseNode != null){
+            int baseVal = baseNode.val;
+            ListNode cursor = baseNode.next;
+            while(cursor != null && cursor.val == baseVal){
+                cursor = cursor.next;
+            }
+            baseNode.next = cursor;
+            baseNode = cursor;
+        }
 
+        return head;
     }
     
     // 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
@@ -594,7 +639,25 @@ public class LinkedListUtils {
     // 例如：给定 1->2->3->4, 你应该返回 2->1->4->3.
     // 链接：https://leetcode-cn.com/problems/swap-nodes-in-pairs/
     public ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode preHead = new ListNode(-1);
+        preHead.next = head;
+        ListNode prePr = preHead;
+        ListNode pl = head;
 
+        while(pl != null && pl.next != null){
+            ListNode pr = pl.next;
+            prePr.next = pr;
+            ListNode np =pr.next;
+            pl.next = np;
+            pr.next = pl;
+            prePr = pl;
+            pl = np;
+        }
+
+        return preHead.next;
     }
 
     // 获取指定链表长度

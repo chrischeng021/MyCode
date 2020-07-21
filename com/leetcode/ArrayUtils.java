@@ -1,7 +1,6 @@
 package com.leetcode;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class ArrayUtils {
     private static Comparator<Integer> cmp = new Comparator<Integer>() {
@@ -862,6 +861,7 @@ public class ArrayUtils {
                 int floor = Math.min(Math.abs(i - k), 0);
                 int ceil = i + k;
                 map.put(nums[i], new HashMap<String, Integer>() {
+                    private static final long serialVersionUID = 1L;
                     {
                         put("floor", floor);
                         put("ceil", ceil);

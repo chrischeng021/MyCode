@@ -43,7 +43,7 @@ public class MyStack {
         return in.isEmpty() && out.isEmpty();
     }
 
-    private void swapElementFromSourceToTarget(Queue target, Queue source){
+    private void swapElementFromSourceToTarget(Queue<Integer> target, Queue<Integer> source){
         while(!source.isEmpty()){
             target.add(source.poll());
         }

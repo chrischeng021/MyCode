@@ -42,7 +42,7 @@ public class MyQueue {
         return in.isEmpty() && out.isEmpty();
     }
 
-    private void swapFromSourceToTarget(Stack target, Stack source){
+    private void swapFromSourceToTarget(Stack<Integer> target, Stack<Integer> source){
         while(!source.isEmpty()){
             target.push(source.pop());
         }

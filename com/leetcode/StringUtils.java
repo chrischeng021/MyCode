@@ -20,16 +20,22 @@ public class StringUtils {
     // 字符串 text 中的每个字母最多只能被使用一次。请你返回最多可以拼凑出多少个单词 "balloon"。
     // 链接：https://leetcode-cn.com/problems/maximum-number-of-balloons
     public static int maxNumberOfBalloons(String text) {
-        final HashSet<Character> singleCharSet = new HashSet<Character>(){{
+        final HashSet<Character> singleCharSet = new HashSet<Character>(){
+            private static final long serialVersionUID = 1L;
+            {
             add('b');
             add('a');
             add('n');
-        }};
+            }
+    };
 
-        final HashSet<Character> doubleCharSet = new HashSet<Character>(){{
+        final HashSet<Character> doubleCharSet = new HashSet<Character>(){
+            private static final long serialVersionUID = 1L;
+            {
             add('l');
             add('o');
-        }};
+            }
+        };
 
         HashMap<Character, Integer> map = new HashMap<>();
 

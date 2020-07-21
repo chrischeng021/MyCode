@@ -16,6 +16,7 @@ public class SortNumberByDicSequence {
         return list;
     }
 
+    // TODO:该问题的思路还不够清楚，需要复习。
     public static void generateDicSequenceNumber(List<Integer> list, int curNum, int max){
         if(curNum > max){
             return;
