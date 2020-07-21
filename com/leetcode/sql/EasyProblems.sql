@@ -1,4 +1,4 @@
-# 编写一个 SQL 查询，查找 Person 表中所有重复的电子邮箱。
+-- 编写一个 SQL 查询，查找 Person 表中所有重复的电子邮箱。
 select Email from
 (
     select Email, count(Email) as num
@@ -7,13 +7,13 @@ select Email from
 ) as t
 where num > 1;
 
-# Another Solution:
+-- Another Solution:
 select Email from Person
 group by Email
 having count(Email) > 1;
 
-# 某网站包含两个表，Customers 表和 Orders 表。编写一个 SQL 查询，找出所有从不订购任何东西的客户。
-# 链接：https://leetcode-cn.com/problems/customers-who-never-order/
+-- 某网站包含两个表，Customers 表和 Orders 表。编写一个 SQL 查询，找出所有从不订购任何东西的客户。
+-- 链接：https://leetcode-cn.com/problems/customers-who-never-order/
 select c.Name as Customers
 from Customers c 
 left join Orders o 

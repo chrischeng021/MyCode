@@ -1542,6 +1542,36 @@ public class ArrayUtils {
         return list;
     }
 
+    // 给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。
+    // 若其中有多个可行的答案，则返回答案中字典序最小的单词。
+    // 链接：https://leetcode-cn.com/problems/longest-word-in-dictionary
+    // TODO：本题可用Trie树加速求解
+    public static String longestWord(String[] words) {
+        HashSet<String> set = new HashSet<>();
+        String ans = null;
+        Arrays.sort(words);
+        for(String word : words){
+            if(word.length() == 1){
+                set.add(word);
+                continue;
+            }
+            if(set.contains(word.substring(0, word.length() - 1))){
+                set.add(word);
+            }
+        }
+        int maxlen = 0;
+        for(String str : set){
+            if(str.length() > maxlen){
+                maxlen = str.length();
+                ans = str;
+            }
+            else if(str.length() == maxlen){
+                ans = ans.compareTo(str) > 0 ? str : ans;
+            }
+        }
+        return ans;
+    }
+    
     /**
      * 合并两个有序数组
      * */
@@ -1567,4 +1597,5 @@ public class ArrayUtils {
         }
         return ret;
     }
+    
 }
