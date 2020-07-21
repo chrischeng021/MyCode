@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import com.leetcode.model.ListNode;
+import com.leetcode.model.Node;
 
 public class LinkedListUtils {
     // 实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。
@@ -479,6 +480,80 @@ public class LinkedListUtils {
         }
 
         return head.next;
+    }
+
+    // 给定循环升序列表中的一个点，写一个函数向这个列表中插入一个新元素，使这个列表仍然是循环升序的。
+    // 给定的可以是这个列表中任意一个顶点的指针，并不一定是这个列表中最小元素的指针。
+    // 如果有多个满足条件的插入位置，你可以选择任意一个位置插入新的值，插入后整个列表仍然保持有序。
+    // 如果列表为空（给定的节点是 null），你需要创建一个循环有序列表并返回这个点。否则。请返回原先给定的节点。
+    // 链接：https://leetcode-cn.com/problems/insert-into-a-sorted-circular-linked-list
+    public Node insert(Node head, int insertVal) {
+        if(head == null){
+            Node node = new Node(insertVal);
+            node.next = node;
+            return node;
+        }
+        if(head.val < insertVal){
+            Node cur = head;
+            while(cur.next != cur && cur.next != head && cur.val <= cur.next.val && cur.next.val < insertVal){
+                cur = cur.next;
+            }
+            // 退出循环有两种情况：
+            // 1. 链表仍在递增，但此时已经找到第一个大于目标值的结点
+            // 2. 已经遍历到链表的尾结点，仍然没有找到大于目标值的结点
+            Node node = new Node(insertVal);
+            node.next = cur.next;
+            cur.next = node;
+        }
+        else if(head.val == insertVal){
+            Node node = new Node(insertVal);
+            node.next = head.next;
+            head.next = node;
+        }
+        else{
+            Node cur = head;
+            while(cur.next != cur && cur.next != head && cur.val <=  cur.next.val){
+                cur = cur.next;
+            }
+            // 此时的cur为尾结点
+            if(cur.next.val > insertVal){
+                Node node = new Node(insertVal);
+                node.next = cur.next;
+                cur.next = node;
+            }
+            else{
+                while(cur.next.val < insertVal){
+                    cur = cur.next;
+                }
+                Node node = new Node(insertVal);
+                node.next = cur.next;
+                cur.next = node;
+            }
+        }
+        return head;
+    }
+
+    // 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 没有重复出现 的数字。
+    // 链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+    // 输入: 1->2->3->3->4->4->5
+    // 输出: 1->2->5
+    public ListNode deleteDuplicatesII(ListNode head) {
+    }
+
+    // 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
+    // 链接：https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/
+    // 输入: 1->1->2
+    // 输出: 1->2
+    public ListNode deleteDuplicatesI(ListNode head) {
+
+    }
+    
+    // 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+    // 你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+    // 例如：给定 1->2->3->4, 你应该返回 2->1->4->3.
+    // 链接：https://leetcode-cn.com/problems/swap-nodes-in-pairs/
+    public ListNode swapPairs(ListNode head) {
+
     }
 
     // 获取指定链表长度

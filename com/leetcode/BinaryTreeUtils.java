@@ -3,6 +3,8 @@ package com.leetcode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import com.leetcode.model.TreeNode;
 
@@ -93,11 +95,5 @@ public class BinaryTreeUtils {
         else{
             return lowestCommonAncestor(root.left, p, q);
         }
-    }
-
-    // 给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
-    // 链接：https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
-    public int kthSmallest(TreeNode root, int k) {
-        
     }
 }
