@@ -1,5 +1,9 @@
 package com.leetcode;
+
 import java.util.List;
+
+import com.leetcode.hard.LargestRectangle;
+import com.leetcode.model.ListNode;
 
 public class Solution {
     public static void printArray(Object[] arr){
@@ -23,5 +27,7 @@ public class Solution {
         System.out.println();
     }
     public static void main(String[] args) {
+        ListNode head = new ListNode(9);
+        System.out.println(LinkedListUtils.plusOne(head));
     }
 }

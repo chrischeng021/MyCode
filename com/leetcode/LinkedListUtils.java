@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import com.leetcode.model.ListNode;
 import com.leetcode.model.Node;
+import com.leetcode.model.TreeNode;
 
 public class LinkedListUtils {
     // 实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。
@@ -43,7 +44,7 @@ public class LinkedListUtils {
 
     // 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
     // 链接：https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/
-    public ListNode reverseList(ListNode head) {
+    public static ListNode reverseList(ListNode head) {
         if (null == head || head.next == null) {
             return head;
         }
@@ -658,6 +659,59 @@ public class LinkedListUtils {
         }
 
         return preHead.next;
+    }
+
+    // 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+    // 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+    // 链接：https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        return generateBST(head, null);
+    }
+
+    private TreeNode generateBST(ListNode from, ListNode to){
+        if(from == to){
+            return null;
+        }
+        ListNode slow = from;
+        ListNode fast = from;
+        while(fast != to && fast.next != to){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        TreeNode root = new TreeNode(slow.val);
+        root.left = generateBST(from, slow);
+        root.right = generateBST(slow.next, to);
+        return root;
+    }
+
+    // 用一个 非空 单链表来表示一个非负整数，然后将这个整数加一。
+    // 你可以假设这个整数除了 0 本身，没有任何前导的 0。
+    // 这个整数的各个数位按照 高位在链表头部、低位在链表尾部 的顺序排列。
+    // 链接：https://leetcode-cn.com/problems/plus-one-linked-list
+    public static ListNode plusOne(ListNode head) {
+        int cap = 1;
+        ListNode reverseHead = reverseList(head);
+        ListNode ptr = reverseHead;
+        while(true){
+            int sum = cap + ptr.val;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+            ptr.val = sum;
+            if(ptr.next != null){
+                ptr = ptr.next;
+            }
+            else{
+                break;
+            }
+        }
+        if(cap > 0){
+            ListNode node = new ListNode(cap);
+            ptr.next = node;
+        }
+        return reverseList(reverseHead);
     }
 
     // 获取指定链表长度

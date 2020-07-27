@@ -1571,6 +1571,53 @@ public class ArrayUtils {
         }
         return ans;
     }
+
+    // 给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
+    // 最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。
+    // 你可以假设除了整数 0 之外，这个整数不会以零开头。
+    // 链接：https://leetcode-cn.com/problems/plus-one
+    public int[] plusOne(int[] digits) {
+        List<Integer> list = new ArrayList<>(digits.length);
+
+        int cap = 1;
+        for(int i = digits.length - 1; i >= 0; i--){
+            int sum = digits[i] + cap;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+            list.add(0, sum);
+        }
+        if(cap > 0){
+            list.add(0, cap);
+        }
+        return list.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    // 旋转数组的最小数字
+    // 链接：https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/
+    public static int minArray(int[] numbers) {
+        if(numbers.length == 1){
+            return numbers[0];
+        }
+        if(numbers.length == 2){
+            return Math.min(numbers[0], numbers[1]);
+        }
+        int l = 0;
+        int r = numbers.length - 1;
+        
+        while(l < r){
+            int mid = (l + r) / 2;
+            if(numbers[mid] > numbers[r]){
+                l = mid + 1;
+            }
+            else if(numbers[mid] < numbers[r]){
+                r = mid;
+            }
+            else{
+                r--;
+            }
+        }
+        return numbers[l];
+    }
     
     /**
      * 合并两个有序数组
