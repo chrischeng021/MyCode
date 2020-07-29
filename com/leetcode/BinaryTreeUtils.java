@@ -2,7 +2,10 @@ package com.leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import com.leetcode.model.TreeNode;
 
@@ -151,4 +154,53 @@ public class BinaryTreeUtils {
         }
         return list;
     }
+
+    // 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+    // 链接：https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new LinkedList<List<Integer>>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if(root == null){
+            return res;
+        }
+        queue.add(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> subList = new ArrayList<>();
+            for(int i = 0; i < size; i++){
+                TreeNode node = queue.poll();
+                subList.add(node.val);
+                if(node.left != null){
+                    queue.add(node.left);
+                }
+                if(node.right != null){
+                    queue.add(node.right);
+                }
+            }
+            res.add(subList);
+        }
+        return res;
+    }
+
+    //实现一个函数，检查二叉树是否平衡。在这个问题中，平衡树的定义如下：任意一个节点，其两棵子树的高度差不超过 1。
+    // 链接：
+    public boolean isBalanced(TreeNode root) {
+        return isBalancedDFSTraverse(root);
+    }
+    private boolean isBalancedDFSTraverse(TreeNode root){
+        if(root == null){
+            return true;
+        }
+        if(Math.abs(getHeight(root.left) - getHeight(root.right)) > 1){
+            return false;
+        }
+        return isBalancedDFSTraverse(root.left) && isBalancedDFSTraverse(root.right);
+    }
+    private int getHeight(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
+    }
+
 }

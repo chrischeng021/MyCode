@@ -2,7 +2,6 @@ package com.leetcode;
 
 import java.util.List;
 
-import com.leetcode.hard.LargestRectangle;
 import com.leetcode.model.ListNode;
 
 public class Solution {
