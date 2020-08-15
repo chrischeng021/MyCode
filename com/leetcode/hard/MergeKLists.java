@@ -1,6 +1,6 @@
 package com.leetcode.hard;
 
-import com.leetcode.LinkedListUtils;
+import com.leetcode.MyLinkedListUtils;
 import com.leetcode.model.ListNode;
 
 public class MergeKLists {
@@ -12,11 +12,11 @@ public class MergeKLists {
             return lists[0];
         }
         if(lists.length == 2){
-            return LinkedListUtils.mergeTwoLists(lists[0], lists[1]);
+            return MyLinkedListUtils.mergeTwoLists(lists[0], lists[1]);
         }
-        ListNode mergedHead = LinkedListUtils.mergeTwoLists(lists[0], lists[1]);
+        ListNode mergedHead = MyLinkedListUtils.mergeTwoLists(lists[0], lists[1]);
         for(int i = 2; i < lists.length; i++){
-            mergedHead = LinkedListUtils.mergeTwoLists(mergedHead, lists[i]);
+            mergedHead = MyLinkedListUtils.mergeTwoLists(mergedHead, lists[i]);
         }
         return mergedHead;
     }

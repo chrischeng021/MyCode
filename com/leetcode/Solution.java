@@ -1,20 +1,5 @@
 package com.leetcode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.leetcode.easy.MinStack;
-import com.leetcode.MyArrayUtils;
-
-import com.leetcode.middle.*;
-import com.leetcode.model.TreeNode;
-import com.leetcode.TestHelper;
 
 /* cSpell:disable */
 public class Solution {
@@ -40,5 +25,6 @@ public class Solution {
     }
     
     public static void main(String[] args) {
+        printIntArray(MyArrayUtils.topKFrequent(new int[]{5,2,5,3,5,3,1,1,3}, 2));
     }
 }

@@ -1,6 +1,7 @@
 package com.leetcode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 /* cSpell:disable */
 public class MyArrayUtils {
     // 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
@@ -1722,6 +1723,47 @@ public class MyArrayUtils {
                 matrix[i][n - j - 1] = temp;
             }
         }
+    }
+
+    // 给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+    // 链接：https://leetcode-cn.com/problems/top-k-frequent-elements/
+    // 思路：使用一个指定大小为K的PriorityQueue, 同时使用一个HashMap记录每个数字的频率
+    public static int[] topKFrequent(int[] nums, int k) {
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(k, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+        HashMap<Integer, Integer> kv = new HashMap<>();
+        for(int num : nums){
+            if(kv.containsKey(num)){
+                kv.put(num, kv.get(num) + 1);
+            }
+            else{
+                kv.put(num, 1);
+            }
+        }
+        for(Map.Entry<Integer, Integer> entry : kv.entrySet()){
+            if(queue.size() < k){
+                queue.add(new int[]{entry.getKey(), entry.getValue()});
+                continue;
+            }
+            if(queue.size() == k){
+                if(entry.getValue() < queue.peek()[1]){
+                    continue;
+                }
+                else{
+                    queue.poll();
+                    queue.add(new int[]{entry.getKey(), entry.getValue()});
+                }
+            }
+        }
+        int []res = new int[k];
+        for(int[] pair : queue){
+            res[--k] = pair[0];
+        }
+        return res;
     }
     
     /**
