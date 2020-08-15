@@ -353,7 +353,7 @@ public class LinkedListUtils {
 
     // 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
     // 链接：https://leetcode-cn.com/problems/merge-two-sorted-lists/
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode head = null;
         ListNode tail = null;
 
@@ -532,23 +532,6 @@ public class LinkedListUtils {
             }
         }
         return head;
-    }
-
-    // 合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
-    // 链接：https://leetcode-cn.com/problems/merge-k-sorted-lists/
-    public ListNode mergeKLists(ListNode[] lists) {
-        if(lists.length == 1){
-            return lists[0];
-        }
-        if(lists.length == 2){
-            return mergeTwoLists(lists[0], lists[1]);
-        }
-        ListNode mergedHead = mergeTwoLists(lists[0], lists[1]);
-        for(int i = 2; i < lists.length; i++){
-            mergedHead = mergeTwoLists(mergedHead, lists[i]);
-        }
-
-        return mergedHead;
     }
 
     // 删除链表 M 个节点之后的 N 个节点

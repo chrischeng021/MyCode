@@ -2,7 +2,7 @@ package com.leetcode;
 
 import java.util.*;
 
-public class ArrayUtils {
+public class MyArrayUtils {
     private static Comparator<Integer> cmp = new Comparator<Integer>() {
         public int compare(Integer a, Integer b) {
             if(a == b){
@@ -1571,6 +1571,69 @@ public class ArrayUtils {
         }
         return ans;
     }
+    // 给你一幅由 N × N 矩阵表示的图像，其中每个像素的大小为 4 字节。请你设计一种算法，将图像旋转 90 度。
+    // 不占用额外内存空间能否做到？
+    // 链接：https://leetcode-cn.com/explore/learn/card/array-and-string/199/introduction-to-2d-array/1414/
+    // 思路：先沿着左对角线翻转，之后再沿着中轴线翻转
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        // 先沿着对角线翻转
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n - 1 - i; j++){
+                if((i + j) == (n - 1)){
+                    continue;
+                }
+                else{
+                    matrix[i][j] = matrix[i][j] + matrix[n - 1 - j][n - 1 - i];
+                    matrix[n - 1 - j][n - 1 - i] = matrix[i][j] - matrix[n - 1 - j][n - 1 - i];
+                    matrix[i][j] -= matrix[n - 1 - j][n - 1 - i];
+                }
+            }
+        }
+        // 再沿着中轴线翻转
+        for(int i = 0; i < n/2; i++){
+            for(int j = 0; j < n; j++){
+                matrix[i][j] = matrix[i][j] + matrix[n - 1 - i][j];
+                matrix[n - 1 - i][j] = matrix[i][j] - matrix[n - 1 - i][j];
+                matrix[i][j] -= matrix[n - 1 - i][j];
+            }
+        }
+    }
+
+    // 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+    // 链接：https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/
+    // TODO: 参考了题解 思路一样 需要Review
+    public int[] spiralOrder(int[][] matrix) {
+        if (matrix.length == 0) return new int[]{};
+        int top = 0, bottom = matrix.length - 1, left = 0, right = matrix[0].length - 1;
+        int[] res = new int[(bottom+1)*(right+1)];
+
+        int index = 0;
+        while (top < bottom && left < right) {
+            for (int i = left; i < right; i++) {
+                res[index++] = matrix[top][i];
+            }
+            for (int i = top; i < bottom; i++) {
+                res[index++] = matrix[i][right];
+            }
+            for (int i = right; i > left; i--) {
+                res[index++] = matrix[bottom][i];
+            }
+            for (int i = bottom; i > top; i--) {
+                res[index++] = matrix[i][left];
+            }
+
+            right -= 1;
+            top += 1;
+            bottom -= 1;
+            left += 1;
+        }
+        if (top == bottom) // 剩下一行，从左到右依次添加
+            for (int i = left; i <= right; i++) res[index++] = matrix[top][i];
+        else if (left == right) // 剩下一列，从上到下依次添加
+            for (int i = top; i <= bottom; i++) res[index++] = matrix[i][left];
+        return res;
+    }
     
     /**
      * 合并两个有序数组
@@ -1597,5 +1660,4 @@ public class ArrayUtils {
         }
         return ret;
     }
-    
 }
