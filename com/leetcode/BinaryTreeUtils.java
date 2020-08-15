@@ -2,7 +2,9 @@ package com.leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import com.leetcode.model.TreeNode;
 
@@ -80,7 +82,7 @@ public class BinaryTreeUtils {
     // 如果节点 p 和节点 q 都在右子树上，那么以右孩子为根节点继续 1 的操作
     // 如果节点 p 和节点 q 都在左子树上，那么以左孩子为根节点继续 1 的操作
     // 如果条件 2 和条件 3 都不成立，这就意味着我们已经找到节 pp 和节点 qq 的 LCA 了
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestorI(TreeNode root, TreeNode p, TreeNode q) {
         if(root == null){
             return root;
         }
@@ -89,10 +91,25 @@ public class BinaryTreeUtils {
             return root;
         }
         if(root.val <= Math.max(p.val, q.val)){
-            return lowestCommonAncestor(root.right, p, q);
+            return lowestCommonAncestorI(root.right, p, q);
         }
         else{
-            return lowestCommonAncestor(root.left, p, q);
+            return lowestCommonAncestorI(root.left, p, q);
+        }
+    }
+
+    public TreeNode lowestCommonAncestorII(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null){
+            return root;
+        }
+        if(root.val > Math.max(p.val, q.val)){
+            return lowestCommonAncestorII(root.left, p, q);
+        }
+        else if(root.val < Math.min(p.val, q.val)){
+            return lowestCommonAncestorII(root.right, p, q);
+        }
+        else{
+            return root;
         }
     }
 
@@ -129,7 +146,6 @@ public class BinaryTreeUtils {
         }
         return generateTrees(1, n);
     }
-
     private List<TreeNode> generateTrees(int from, int to){
         List<TreeNode> list = new ArrayList<>();
         if(from > to){
@@ -150,5 +166,109 @@ public class BinaryTreeUtils {
             }
         }
         return list;
+    }
+
+    // 请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
+    // 链接：https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/
+    public static boolean isSymmetric(TreeNode root) {
+        if(root == null){
+            return true;
+        }
+
+        LinkedList<TreeNode> list = new LinkedList<TreeNode>();
+        list.add(root);
+        while(!list.isEmpty()){
+            int len = list.size();
+            int[] arr = new int[len];
+            for(int i = 0; i < len; i++){
+                TreeNode node = list.poll();
+                arr[i] = node == null ? Integer.MIN_VALUE : node.val;
+                if(node != null){
+                    list.add(node.left);
+                    list.add(node.right);
+                }
+                
+            }
+            for(int i = 0, j = len - 1; i < j; i++, j--){
+                if(arr[i] != arr[j]){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    // 给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+    // 链接：https://leetcode-cn.com/problems/binary-tree-level-order-traversal/
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> list = new LinkedList<>();
+        if(root != null){
+            Queue<TreeNode> queue = new LinkedList<TreeNode>();
+            queue.add(root);
+            while(!queue.isEmpty()){
+                int len = queue.size();
+                List<Integer> subList = new LinkedList<>();
+                for(int i = 0; i < len; i++){
+                    TreeNode node = queue.poll();
+                    if(node != null){
+                        subList.add(node.val);
+                        queue.add(node.left);
+                        queue.add(node.right);
+                    }
+                }
+                if(!subList.isEmpty()){
+                    list.add(subList);
+                }
+            }
+        }
+        
+        return list;
+    }
+    // 给定一个非空特殊的二叉树，每个节点都是正数，并且每个节点的子节点数量只能为 2 或 0。如果一个节点有两个子节点的话，那么该节点的值等于两个子节点中较小的一个。
+    // 给出这样的一个二叉树，你需要输出所有节点中的第二小的值。如果第二小的值不存在的话，输出 -1 。
+    // 链接：https://leetcode-cn.com/problems/second-minimum-node-in-a-binary-tree
+    public int findSecondMinimumValue(TreeNode root) {
+        if(root == null || root.left == null){
+            return -1;
+        }
+        return findFirstDifferent(root, root.val);
+    }
+    private int findFirstDifferent(TreeNode root, int val){
+        if(root == null){
+            return -1;
+        }
+        if(root.val != val){
+            return root.val;
+        }
+        if(root.left == null){
+            return -1;
+        }
+        int right = findFirstDifferent(root.right, val);
+        int left = findFirstDifferent(root.left, val);
+        return left == -1 ? right : right == -1 ? left : Math.min(left, right);
+    }
+
+    // 根据给定数组生成二叉搜索树
+    public TreeNode bstFromPreorder(int[] preorder) {
+        if(preorder.length == 0){
+            return null;
+        }
+        Arrays.sort(preorder);
+        return bstFromPreorder(preorder, 0, preorder.length - 1);
+    }
+    private TreeNode bstFromPreorder(int[] preorder, int l, int r){
+        if(l < r){
+            int mid = (l + r)/2;
+            TreeNode root = new TreeNode(preorder[mid]);
+            root.left = bstFromPreorder(preorder, l, mid - 1);
+            root.right = bstFromPreorder(preorder, mid + 1, r);
+            return root;
+        }
+        else if(l == r){
+            return new TreeNode(preorder[l]);
+        }
+        else{
+            return null;
+        }
     }
 }
