@@ -32,7 +32,7 @@ public class MinStack {
         return stack.peek();
     }
     
-    public int getMin() {
+    public int min() {
         return min.peek();
     }
 }

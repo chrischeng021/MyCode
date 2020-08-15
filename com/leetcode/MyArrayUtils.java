@@ -1,16 +1,33 @@
 package com.leetcode;
 
 import java.util.*;
-
+/* cSpell:disable */
 public class MyArrayUtils {
+    // 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+    // 链接：https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/
     private static Comparator<Integer> cmp = new Comparator<Integer>() {
         public int compare(Integer a, Integer b) {
             if(a == b){
                 return 0;
             }
-            return String.valueOf(a).compareTo(String.valueOf(b));
+            String s = String.valueOf(a);
+            String t = String.valueOf(b);
+
+            return (s + t).compareTo(t + s);
         }
     };
+    public static String minNumber(int[] nums) {
+        nums = Arrays.stream(nums).
+            boxed().
+            sorted(cmp). // sort descending
+            mapToInt(i -> i).
+            toArray();
+        StringBuilder ans = new StringBuilder();
+        for(int num : nums){
+            ans.append(num);
+        }
+        return ans.toString();
+    }
     
     // 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
     // 我们是这样定义一个非递减数列的： 对于数组中所有的 i (0 <= i <= n-2)，总满足 nums[i] <= nums[i + 1]。
@@ -1575,7 +1592,7 @@ public class MyArrayUtils {
     // 不占用额外内存空间能否做到？
     // 链接：https://leetcode-cn.com/explore/learn/card/array-and-string/199/introduction-to-2d-array/1414/
     // 思路：先沿着左对角线翻转，之后再沿着中轴线翻转
-    public void rotate(int[][] matrix) {
+    public void rotateI(int[][] matrix) {
         int n = matrix.length;
         // 先沿着对角线翻转
         for(int i = 0; i < n; i++){
@@ -1633,6 +1650,78 @@ public class MyArrayUtils {
         else if (left == right) // 剩下一列，从上到下依次添加
             for (int i = top; i <= bottom; i++) res[index++] = matrix[i][left];
         return res;
+    }
+
+    // 给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
+    // 最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。
+    // 你可以假设除了整数 0 之外，这个整数不会以零开头。
+    // 链接：https://leetcode-cn.com/problems/plus-one
+    public int[] plusOne(int[] digits) {
+        List<Integer> list = new ArrayList<>(digits.length);
+
+        int cap = 1;
+        for(int i = digits.length - 1; i >= 0; i--){
+            int sum = digits[i] + cap;
+            cap = sum > 9 ? 1 : 0;
+            sum = sum > 9 ? sum - 10 : sum;
+            list.add(0, sum);
+        }
+        if(cap > 0){
+            list.add(0, cap);
+        }
+        return list.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    // 旋转数组的最小数字
+    // 链接：https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/
+    public static int minArray(int[] numbers) {
+        if(numbers.length == 1){
+            return numbers[0];
+        }
+        if(numbers.length == 2){
+            return Math.min(numbers[0], numbers[1]);
+        }
+        int l = 0;
+        int r = numbers.length - 1;
+        
+        while(l < r){
+            int mid = (l + r) / 2;
+            if(numbers[mid] > numbers[r]){
+                l = mid + 1;
+            }
+            else if(numbers[mid] < numbers[r]){
+                r = mid;
+            }
+            else{
+                r--;
+            }
+        }
+        return numbers[l];
+    }
+
+    // 给定一个 n × n 的二维矩阵表示一个图像。
+    // 将图像顺时针旋转 90 度。
+    // 说明：
+    // 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+    // 链接：https://leetcode-cn.com/problems/rotate-image
+    public void rotate(int[][] matrix) {
+        // 先沿对角线翻转
+        int n = matrix.length;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n && j != i; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        // 再上下翻转
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < (n + 1)/2; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = temp;
+            }
+        }
     }
     
     /**
