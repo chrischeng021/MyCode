@@ -1,16 +1,33 @@
 package com.leetcode;
 
 import java.util.*;
-
-public class ArrayUtils {
+/* cSpell:disable */
+public class MyArrayUtils {
+    // 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+    // 链接：https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/
     private static Comparator<Integer> cmp = new Comparator<Integer>() {
         public int compare(Integer a, Integer b) {
             if(a == b){
                 return 0;
             }
-            return String.valueOf(a).compareTo(String.valueOf(b));
+            String s = String.valueOf(a);
+            String t = String.valueOf(b);
+
+            return (s + t).compareTo(t + s);
         }
     };
+    public static String minNumber(int[] nums) {
+        nums = Arrays.stream(nums).
+            boxed().
+            sorted(cmp). // sort descending
+            mapToInt(i -> i).
+            toArray();
+        StringBuilder ans = new StringBuilder();
+        for(int num : nums){
+            ans.append(num);
+        }
+        return ans.toString();
+    }
     
     // 给你一个长度为 n 的整数数组，请你判断在 最多 改变 1 个元素的情况下，该数组能否变成一个非递减数列。
     // 我们是这样定义一个非递减数列的： 对于数组中所有的 i (0 <= i <= n-2)，总满足 nums[i] <= nums[i + 1]。
@@ -1618,6 +1635,31 @@ public class ArrayUtils {
         }
         return numbers[l];
     }
+
+    // 给定一个 n × n 的二维矩阵表示一个图像。
+    // 将图像顺时针旋转 90 度。
+    // 说明：
+    // 你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+    // 链接：https://leetcode-cn.com/problems/rotate-image
+    public void rotate(int[][] matrix) {
+        // 先沿对角线翻转
+        int n = matrix.length;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n && j != i; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        // 再上下翻转
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < (n + 1)/2; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = temp;
+            }
+        }
+    }
     
     /**
      * 合并两个有序数组
@@ -1644,5 +1686,4 @@ public class ArrayUtils {
         }
         return ret;
     }
-    
 }

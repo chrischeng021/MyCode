@@ -6,9 +6,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
-
-public class StringUtils {
+/* cSpell:disable */
+public class MyStringUtils {
     // 给定一个字符串 S，返回 “反转后的” 字符串，其中不是字母的字符都保留在原地，而所有字母的位置发生反转。
     // 链接：https://leetcode-cn.com/problems/reverse-only-letters/
     public String reverseOnlyLetters(String S) {
@@ -77,9 +78,65 @@ public class StringUtils {
         return 0;
     }
 
-    public int romanToInt(String s) {
-        int res = 0;
-        return res;
+    // 罗马数字转整数
+    // 链接：https://leetcode-cn.com/problems/roman-to-integer/
+    public static int romanToInt(String str){
+        Map<String, Integer> map = new HashMap<>(){
+            private static final long serialVersionUID = 228369631327457321L;
+            {
+            put("I", 1);
+            put("V", 5);
+            put("X", 10);
+            put("L", 50);
+            put("C", 100);
+            put("D", 500);
+            put("M", 1000);
+        }};
+
+        if(str == null || str.length() == 0){
+            return 0;
+        }
+
+        if(str.length() == 1){
+            return map.get(str);
+        }
+
+        String pre = String.valueOf(str.charAt(str.length() - 1));
+        int ans = map.get(pre);
+        
+        for(int i = str.length() - 2; i >= 0; i--){
+            switch(str.charAt(i)){
+                case 'I':
+                    if(pre.equals("V") || pre.equals("X")){
+                        ans -= 1;
+                    }
+                    else{
+                        ans += 1;
+                    }
+                    break;
+                case 'X':
+                    if(pre.equals("L") || pre.equals("C")){
+                        ans -= 10;
+                    }
+                    else{
+                        ans += 10;
+                    }
+                    break;
+                case 'C':
+                    if(pre.equals("D") || pre.equals("M")){
+                        ans -= 100;
+                    }
+                    else{
+                        ans += 100;
+                    }
+                    break;
+                default:
+                    ans += map.get(String.valueOf(str.charAt(i)));
+                    break;
+            }
+            pre = String.valueOf(str.charAt(i));
+        }
+        return ans;
     }
 
     // 给出 字符串 text 和 字符串列表 words, 
