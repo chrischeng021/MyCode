@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.leetcode.easy.MinStack;
+import com.leetcode.middle.DpUtils;
+import com.leetcode.middle.MeetingRooms;
 import com.leetcode.MyArrayUtils;
 
 /* cSpell:disable */
@@ -33,6 +35,6 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        System.out.println(MyArrayUtils.minNumber(new int[]{12,121}));
+        System.out.println(DpUtils.uniquePaths(7, 3));
     }
 }

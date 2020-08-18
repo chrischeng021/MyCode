@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -223,5 +224,44 @@ public class MyStringUtils {
         }
 
         return sb.toString();
+    }
+
+    // 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+    // 链接：https://leetcode-cn.com/problems/group-anagrams/
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ans = new LinkedList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for(String str : strs){
+            char[] arr = str.toCharArray();
+            Arrays.sort(arr);
+            String dicSequenceStr = String.valueOf(arr);
+            if(map.containsKey(dicSequenceStr)){
+                map.get(dicSequenceStr).add(str);
+            }
+            else{
+                map.put(dicSequenceStr, new LinkedList<String>(){
+                    private static final long serialVersionUID = 1L;
+                    {
+                        add(str);
+                    }
+                });
+            }
+        }
+
+        for(Map.Entry<String, List<String>> entry : map.entrySet()){
+            ans.add(entry.getValue());
+        }
+
+        return ans;
+    }
+
+    // 给定一个经过编码的字符串，返回它解码后的字符串。
+    // 编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数。
+    // 你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+    // 此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
+    // 链接：https://leetcode-cn.com/problems/decode-string
+    public String decodeString(String s) {
+        
     }
 }
