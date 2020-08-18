@@ -1,6 +1,7 @@
 package com.leetcode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 /* cSpell:disable */
 public class MyArrayUtils {
     // 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
@@ -1588,6 +1589,69 @@ public class MyArrayUtils {
         }
         return ans;
     }
+    // 给你一幅由 N × N 矩阵表示的图像，其中每个像素的大小为 4 字节。请你设计一种算法，将图像旋转 90 度。
+    // 不占用额外内存空间能否做到？
+    // 链接：https://leetcode-cn.com/explore/learn/card/array-and-string/199/introduction-to-2d-array/1414/
+    // 思路：先沿着左对角线翻转，之后再沿着中轴线翻转
+    public void rotateI(int[][] matrix) {
+        int n = matrix.length;
+        // 先沿着对角线翻转
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n - 1 - i; j++){
+                if((i + j) == (n - 1)){
+                    continue;
+                }
+                else{
+                    matrix[i][j] = matrix[i][j] + matrix[n - 1 - j][n - 1 - i];
+                    matrix[n - 1 - j][n - 1 - i] = matrix[i][j] - matrix[n - 1 - j][n - 1 - i];
+                    matrix[i][j] -= matrix[n - 1 - j][n - 1 - i];
+                }
+            }
+        }
+        // 再沿着中轴线翻转
+        for(int i = 0; i < n/2; i++){
+            for(int j = 0; j < n; j++){
+                matrix[i][j] = matrix[i][j] + matrix[n - 1 - i][j];
+                matrix[n - 1 - i][j] = matrix[i][j] - matrix[n - 1 - i][j];
+                matrix[i][j] -= matrix[n - 1 - i][j];
+            }
+        }
+    }
+
+    // 输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+    // 链接：https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/
+    // TODO: 参考了题解 思路一样 需要Review
+    public int[] spiralOrder(int[][] matrix) {
+        if (matrix.length == 0) return new int[]{};
+        int top = 0, bottom = matrix.length - 1, left = 0, right = matrix[0].length - 1;
+        int[] res = new int[(bottom+1)*(right+1)];
+
+        int index = 0;
+        while (top < bottom && left < right) {
+            for (int i = left; i < right; i++) {
+                res[index++] = matrix[top][i];
+            }
+            for (int i = top; i < bottom; i++) {
+                res[index++] = matrix[i][right];
+            }
+            for (int i = right; i > left; i--) {
+                res[index++] = matrix[bottom][i];
+            }
+            for (int i = bottom; i > top; i--) {
+                res[index++] = matrix[i][left];
+            }
+
+            right -= 1;
+            top += 1;
+            bottom -= 1;
+            left += 1;
+        }
+        if (top == bottom) // 剩下一行，从左到右依次添加
+            for (int i = left; i <= right; i++) res[index++] = matrix[top][i];
+        else if (left == right) // 剩下一列，从上到下依次添加
+            for (int i = top; i <= bottom; i++) res[index++] = matrix[i][left];
+        return res;
+    }
 
     // 给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
     // 最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。
@@ -1659,6 +1723,47 @@ public class MyArrayUtils {
                 matrix[i][n - j - 1] = temp;
             }
         }
+    }
+
+    // 给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+    // 链接：https://leetcode-cn.com/problems/top-k-frequent-elements/
+    // 思路：使用一个指定大小为K的PriorityQueue, 同时使用一个HashMap记录每个数字的频率
+    public static int[] topKFrequent(int[] nums, int k) {
+        PriorityQueue<int[]> queue = new PriorityQueue<int[]>(k, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+        HashMap<Integer, Integer> kv = new HashMap<>();
+        for(int num : nums){
+            if(kv.containsKey(num)){
+                kv.put(num, kv.get(num) + 1);
+            }
+            else{
+                kv.put(num, 1);
+            }
+        }
+        for(Map.Entry<Integer, Integer> entry : kv.entrySet()){
+            if(queue.size() < k){
+                queue.add(new int[]{entry.getKey(), entry.getValue()});
+                continue;
+            }
+            if(queue.size() == k){
+                if(entry.getValue() < queue.peek()[1]){
+                    continue;
+                }
+                else{
+                    queue.poll();
+                    queue.add(new int[]{entry.getKey(), entry.getValue()});
+                }
+            }
+        }
+        int []res = new int[k];
+        for(int[] pair : queue){
+            res[--k] = pair[0];
+        }
+        return res;
     }
     
     /**

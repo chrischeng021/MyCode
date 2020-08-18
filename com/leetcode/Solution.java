@@ -1,15 +1,8 @@
 package com.leetcode;
-
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import com.leetcode.easy.MinStack;
-import com.leetcode.middle.DpUtils;
-import com.leetcode.middle.MeetingRooms;
-import com.leetcode.MyArrayUtils;
 
 /* cSpell:disable */
 public class Solution {
@@ -35,6 +28,7 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        System.out.println(DpUtils.uniquePaths(7, 3));
+        System.out.println();
+        printIntArray(MyArrayUtils.topKFrequent(new int[]{5,2,5,3,5,3,1,1,3}, 2));
     }
 }
