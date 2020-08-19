@@ -28,6 +28,9 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        printIntArray(MyArrayUtils.topKFrequent(new int[]{5,2,5,3,5,3,1,1,3}, 2));
+        int[] arr = MySortUtils.generateRandomArray(25);
+        printIntArray(arr);
+        MySortUtils.quickSort(arr, "dsc");
+        printIntArray(arr);
     }
 }

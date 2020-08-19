@@ -12,7 +12,6 @@ public class MergeKLists {
             return lists[0];
         }
         if(lists.length == 2){
-
             return MyLinkedListUtils.mergeTwoLists(lists[0], lists[1]);
         }
         ListNode mergedHead = MyLinkedListUtils.mergeTwoLists(lists[0], lists[1]);
