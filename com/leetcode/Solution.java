@@ -32,5 +32,6 @@ public class Solution {
         printIntArray(arr);
         MySortUtils.quickSort(arr, "dsc");
         printIntArray(arr);
+        System.out.println();
     }
 }

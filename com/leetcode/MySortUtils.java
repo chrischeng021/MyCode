@@ -80,4 +80,43 @@ public class MySortUtils{
         quickSortDsc(arr, begin, l - 1);
         quickSortDsc(arr, l + 1, end);
     }
+
+    public static void quickSortByMiddle(int[]arr, int begin, int end){
+        int mid = (begin + end) >> 1;
+        int l = begin, r = end;
+        while(l < r){
+            while(l < arr.length && arr[l] < arr[mid]){
+                l++;
+            }
+            while(r >= 0 && arr[r] > arr[mid]){
+                r--;
+            }
+            if(l >= r){
+                break;
+            }
+            swap(arr, l, r);
+            if(l == mid){
+                r--;
+            }
+            if(r == mid){
+                l++;
+            }
+        }
+        if(l == r){
+            l++;
+            r--;
+        }
+        if(begin < r){
+            quickSortByMiddle(arr, begin, r);
+        }
+        if(l < end){
+            quickSortByMiddle(arr, l, end);
+        }
+    }
+
+    private static void swap(int[]arr, int i, int j){
+        int iVal = arr[i];
+        arr[i] = arr[j];
+        arr[j] = iVal;
+    }
 }

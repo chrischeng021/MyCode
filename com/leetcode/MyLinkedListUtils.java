@@ -58,6 +58,16 @@ public class MyLinkedListUtils {
         }
         return cur;
     }
+    // 反转链表的递归实现
+    public ListNode reverseListCursive(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode reversedHead = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return reversedHead;
+    }
 
     // 编写代码，移除未排序链表中的重复节点。保留最开始出现的节点。
     // O(n) 复杂度的实现需要使用临时缓冲区存放已经出现过的唯一结点

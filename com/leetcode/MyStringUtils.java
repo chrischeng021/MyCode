@@ -12,6 +12,7 @@ import java.util.Stack;
 
 /* cSpell:disable */
 public class MyStringUtils {
+    public static int index = 0;
     // 给定一个字符串 S，返回 “反转后的” 字符串，其中不是字母的字符都保留在原地，而所有字母的位置发生反转。
     // 链接：https://leetcode-cn.com/problems/reverse-only-letters/
     public String reverseOnlyLetters(final String S) {
@@ -226,6 +227,36 @@ public class MyStringUtils {
         return sb.toString();
     }
 
+    // 给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+    // 链接：https://leetcode-cn.com/problems/group-anagrams/
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ans = new LinkedList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for(String str : strs){
+            char[] arr = str.toCharArray();
+            Arrays.sort(arr);
+            String dicSequenceStr = String.valueOf(arr);
+            if(map.containsKey(dicSequenceStr)){
+                map.get(dicSequenceStr).add(str);
+            }
+            else{
+                map.put(dicSequenceStr, new LinkedList<String>(){
+                    private static final long serialVersionUID = 1L;
+                    {
+                        add(str);
+                    }
+                });
+            }
+        }
+
+        for(Map.Entry<String, List<String>> entry : map.entrySet()){
+            ans.add(entry.getValue());
+        }
+
+        return ans;
+    }
+        
     // 给定两个句子 A 和 B 。 （句子是一串由空格分隔的单词。每个单词仅由小写字母组成。）
     // 如果一个单词在其中一个句子中只出现一次，在另一个句子中却没有出现，那么这个单词就是不常见的。
     // 返回所有不常用单词的列表。
@@ -391,5 +422,43 @@ public class MyStringUtils {
             l = r;
         }
         return ans.substring(0, ans.length() - 1).toString();
+    }
+
+    // 给定一个经过编码的字符串，返回它解码后的字符串。
+    // 编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数。
+    // 你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+    // 此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 k ，例如不会出现像 3a 或 2[4] 的输入。
+    // 链接：https://leetcode-cn.com/problems/decode-string
+    // TODO: 本题参考了题解，需要复习。同时本题可以通过栈来实现，考虑第二种写法。
+    public static String decodeString(String s){
+        int repeat = 0;
+        String res = "";
+        String generateRepeatString = "";
+        while(index < s.length()){
+            char ch = s.charAt(index);
+
+            if(Character.isDigit(ch)){
+                repeat += repeat * 10 + (ch - '0');
+            }
+            else if(Character.isAlphabetic(ch)){
+                res += ch;
+            }
+            else if(ch == '['){
+                index++;
+                generateRepeatString = decodeString(s);
+                while(repeat-- > 0){
+                    res += generateRepeatString;
+                }
+                repeat = 0;
+            }
+            else{
+                break;
+            }
+            index++;
+        }
+        return res;
+    }
+    public static String decodeStringUsingStack(String s){
+        return null;
     }
 }
