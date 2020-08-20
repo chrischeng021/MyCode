@@ -1335,8 +1335,23 @@ public class MyArrayUtils {
     // 请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
     // https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/
     public int[] singleNumbers(int[] nums) {
-        int[] res = new int[2];
-        // Todo.
+        int[] res = new int[]{0, 0};
+        int xorSum = 0;
+        for(int num : nums){
+            xorSum ^= num;
+        }
+        int flag = 1;
+        while((xorSum & flag) == 0){
+            flag <<= 1;
+        }
+        for(int num : nums){
+            if((num & flag) == 0){
+                res[0] ^= num;
+            }
+            else{
+                res[1] ^= num;
+            }
+        }
         return res;
     }
 
