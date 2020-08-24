@@ -1,6 +1,12 @@
 package com.leetcode;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /* cSpell:disable */
@@ -58,5 +64,134 @@ public class WeeklyContest {
     public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
         double ans = 0;
         return ans;
+    }
+
+    public static String thousandSeparator(int n) {
+        StringBuilder ans = new StringBuilder();
+        while(n > 1000){
+            StringBuilder temp = new StringBuilder().append(".");
+            int val = n % 1000;
+            int zeroCount = val > 99 ? 0 : val > 9 ? 1 : 2;
+            while(zeroCount-- > 0){
+                temp.append(String.valueOf(0));
+            }
+            temp.append(String.valueOf(val));
+            ans.insert(0, temp.toString());
+            n /= 1000;
+        }
+        ans.insert(0, String.valueOf(n));
+        return ans.toString();
+    }
+
+    public static int minOperations(int[] nums) {
+        int minusCount = 0;
+        int zeroCount = 0;
+        int multipleCount = 0;
+        while(true){
+            zeroCount = 0;
+            for(int i = 0; i < nums.length; i++){
+                if(nums[i] % 2 != 0){
+                    nums[i] -= 1;
+                    minusCount++;
+                }
+                nums[i] >>= 1;
+                if(nums[i] == 0){
+                    zeroCount++;
+                }
+            }
+            if(zeroCount == nums.length){
+                break;
+            }
+            else{
+                multipleCount++;
+            }
+        }
+        return minusCount + multipleCount;
+    }
+
+    public static List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+        List<Integer> ans  = new LinkedList<>();
+        HashMap<Integer, HashSet<Integer>> fromMap = new HashMap<>();
+        HashMap<Integer, HashSet<Integer>> toMap = new HashMap<>();
+        HashSet<Integer> reachedPoint = new HashSet<>();
+
+        for(List<Integer> edge : edges){
+            int from = edge.get(0);
+            int to = edge.get(1);
+
+            if(!fromMap.containsKey(from)){
+                HashSet<Integer> set = new HashSet<>();
+                fromMap.put(from, set);
+                fromMap.get(from).add(to);
+            }
+            fromMap.get(from).add(to);
+
+            if(!toMap.containsKey(to)){
+                HashSet<Integer> set = new HashSet<>();
+                toMap.put(to, set);
+                toMap.get(to).add(from);
+            }
+            toMap.get(to).add(from);
+        }
+
+        for(int i = 0; i < n; i++){
+            if(reachedPoint.contains(i)){
+                continue;
+            }
+            search(ans, fromMap, toMap, reachedPoint, i);
+        }
+
+        return ans;
+    }
+
+    private static void search(List<Integer> ans, HashMap<Integer, HashSet<Integer>> fromMap, HashMap<Integer, HashSet<Integer>> toMap, HashSet<Integer> reachedPoint, int target){
+        // First, find the most effective point;
+        HashSet<Integer> targetSet = toMap.get(Integer.valueOf(target));
+        int[] curMostEffective = new int[]{-1, Integer.MIN_VALUE};
+        if(targetSet == null){
+            curMostEffective[0] = target;
+        }
+        else{
+            for(int i : targetSet){
+                if(fromMap.get(i).size() > curMostEffective[1]){
+                    curMostEffective[0] = i;
+                    curMostEffective[1] = fromMap.get(i).size();
+                }
+            }
+        }
+        
+        if(curMostEffective[0] > 0){
+            ans.add(curMostEffective[0]);
+            reachedPoint.add(curMostEffective[0]);
+            if(fromMap.containsKey(curMostEffective[0])){
+                reachedPoint.addAll(fromMap.get(curMostEffective[0]));
+            }
+        }
+
+        rebuild(reachedPoint, fromMap, toMap);
+    }
+
+    private static void rebuild(HashSet<Integer> reachedPoint,
+        HashMap<Integer, HashSet<Integer>> fromMap,
+        HashMap<Integer, HashSet<Integer>> toMap){
+        for(Map.Entry<Integer, HashSet<Integer>> entry : fromMap.entrySet()){
+            HashSet<Integer> set = entry.getValue();
+            Iterator<Integer> it = set.iterator();
+            while(it.hasNext()){
+                if(reachedPoint.contains(it.next())){
+                    it.remove();
+                }
+            }
+        }
+
+        for(Map.Entry<Integer, HashSet<Integer>> entry : toMap.entrySet()){
+            HashSet<Integer> set = entry.getValue();
+            Iterator<Integer> it = set.iterator();
+            while(it.hasNext()){
+                if(reachedPoint.contains(it.next())){
+                    it.remove();
+                }
+            }
+        }
     }
 }

@@ -1,11 +1,16 @@
 package com.leetcode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.leetcode.middle.LetterCombinations;
+import com.leetcode.model.TreeNode;
+
+import com.leetcode.middle.BuildBinaryTreeFromPreAndInOrder;
 import com.leetcode.middle.CombinationSum;
+import com.leetcode.WeeklyContest;
+import com.leetcode.easy.MyDFS;
 
 /* cSpell:disable */
 public class Solution {
@@ -78,8 +83,8 @@ public class Solution {
         arr[j] = iVal;
     }
     public static void main(String[] args) {
-        List<List<Integer>> lists = CombinationSum.combinationSumII(new int[]{2,3,5,8}, 8);
-        for(List<Integer> list : lists){
+        List<List<Integer>> ans = MyDFS.subsets(new int[]{1,3,2});
+        for(List<Integer> list : ans){
             printIntList(list);
         }
     }
