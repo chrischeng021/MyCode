@@ -82,10 +82,8 @@ public class Solution {
         arr[i] = arr[j];
         arr[j] = iVal;
     }
+
     public static void main(String[] args) {
-        List<List<Integer>> ans = MyDFS.subsets(new int[]{1,3,2});
-        for(List<Integer> list : ans){
-            printIntList(list);
-        }
+        System.out.println(myPow(3, 5));
     }
 }

@@ -30,4 +30,37 @@ public class MyMathsUtils {
         }
         return dp[n];
     }
+
+    // 实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+    // 链接：https://leetcode-cn.com/problems/powx-n/
+    // TODO：快速冥解法，需要Review
+    public static double myPow(double x, int n) {
+        long m = n;
+        if(m < 0){
+            m = -m;
+            x = 1/x;
+        }
+        if(x == 0.0f) return 0.0d;
+        double res = 1;
+        while(m > 0){
+            if( (m & 1) == 0x1){
+                res *= x;
+            }
+            x *= x;
+            n >>= 1;
+        }
+        return res;
+    }
+    // 快速冥的递归解法
+    private double fastPow(double x, long n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        double half = fastPow(x, n / 2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
 }
