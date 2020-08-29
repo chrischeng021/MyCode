@@ -10,7 +10,7 @@ import com.leetcode.model.TreeNode;
 import com.leetcode.middle.BuildBinaryTreeFromPreAndInOrder;
 import com.leetcode.middle.CombinationSum;
 import com.leetcode.WeeklyContest;
-import com.leetcode.easy.MyDFS;
+import com.leetcode.MyDFS;
 
 /* cSpell:disable */
 public class Solution {
@@ -36,7 +36,7 @@ public class Solution {
     }
     public static void printStringList(List<String> list){
         for(String val : list){
-            System.out.print(val + " ");
+            System.out.println(val + " ");
         }
         System.out.println();
     }
@@ -84,6 +84,6 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        System.out.println(myPow(3, 5));
+        printStringList(MyDFS.generateParenthesis(4));
     }
 }
