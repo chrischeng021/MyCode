@@ -1,7 +1,9 @@
 package com.leetcode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,6 +86,9 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        printStringList(MyDFS.generateParenthesis(4));
+        List<List<String>> res = MyDFS.solveNQueens(4);
+        for(List<String> list : res){
+            printStringList(list);
+        }
     }
 }
