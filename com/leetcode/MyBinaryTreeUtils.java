@@ -301,4 +301,158 @@ public class MyBinaryTreeUtils {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         return null;
     }
+
+    // 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+    // B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+    // https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        if( A == null || B == null) return false;
+        return isSubTreeSubStructure(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    }
+
+    private boolean isSubTreeSubStructure(TreeNode A, TreeNode B){
+        if(B == null) return true;
+        if(A == null || A.val != B.val) return false;
+        return isSubTreeSubStructure(A.left, B.left) && isSubTreeSubStructure(A.right, B.right);
+    }
+
+    // 给定一个二叉树，返回所有从根节点到叶子节点的路径。
+    // 链接：https://leetcode-cn.com/problems/binary-tree-paths/
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> ans = new LinkedList<>();
+        if(root == null) return ans;
+        if(root.left == null && root.right == null){
+            ans.add(String.valueOf(root.val));
+            return ans;
+        }
+        dfsTraverseBinaryTree(root, ans, new LinkedList<>());
+        return ans;
+    }
+    private void dfsTraverseBinaryTree(TreeNode root, List<String> ans, List<Integer> path){
+        if(root.left == null && root.right == null){
+            StringBuilder sb = new StringBuilder();
+            for(int val : path) sb.append(val).append("->");
+            sb.append(root.val);
+            ans.add(sb.toString());
+            return;
+        }
+        path.add(root.val);
+        if(root.left != null)
+            dfsTraverseBinaryTree(root.left, ans, new LinkedList<>(path));
+        if(root.right != null)
+            dfsTraverseBinaryTree(root.right, ans, new LinkedList<>(path));
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return true;
+        if(root.left == null && root.right == null) return true;
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean isValidBST(TreeNode root, long min, long max){
+        if(root == null) return true;
+        if(root.left == null && root.right == null) return root.val < max && root.val > min;
+        if(root.left != null && root.val <= root.left.val) return false;
+        if(root.right != null && root.val >= root.right.val) return false;
+        return isValidBST(root.left, min, root.val) && isValidBST(root.right, root.val, max);
+    }
+
+    // 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
+    // 链接：https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/
+    static class Node {
+        public int val;
+        public Node left;
+        public Node right;
+    
+        public Node() {}
+    
+        public Node(int _val) {
+            val = _val;
+        }
+    
+        public Node(int _val,Node _left,Node _right) {
+            val = _val;
+            left = _left;
+            right = _right;
+        }
+    };
+    public static List<Node> preOrderList = new LinkedList<>();
+    public static Node treeToDoublyListI(Node root) {
+        if(root == null || (root.left == null && root.right == null)) return root;
+        dfsTraversePreOrder(root);
+        preOrderList.get(0).left = preOrderList.get(preOrderList.size() - 1);
+        preOrderList.get(0).right = preOrderList.get(1);
+
+        preOrderList.get(preOrderList.size() - 1).right = preOrderList.get(0);
+        preOrderList.get(preOrderList.size() - 1).left = preOrderList.get(preOrderList.size() - 2);
+
+        for(int i = 1; i < preOrderList.size() - 1; i++){
+            preOrderList.get(i).left = preOrderList.get(i - 1);
+            preOrderList.get(i).right = preOrderList.get(i + 1);
+        }
+
+        return preOrderList.get(0);
+    }
+    private static void dfsTraversePreOrder(Node root){
+        if(root == null) return;
+        dfsTraversePreOrder(root.left);
+        preOrderList.add(root);
+        dfsTraversePreOrder(root.right);
+    }
+    public static void test(){
+        Node root = new Node(2);
+        root.left = new Node(1);
+        root.right = new Node(3);
+        Node head = treeToDoublyListI(root);
+        System.out.println(head.val);
+    }
+    // 另一种原地修改的办法 使用一个前置结点指针
+    Node pre, head;
+    public Node treeToDoublyListII(Node root) {
+        if(root == null) return null;
+        dfs(root);
+        head.left = pre;
+        pre.right = head;
+        return head;
+    }
+    void dfs(Node cur) {
+        if(cur == null) return;
+        dfs(cur.left);
+        if(pre != null) pre.right = cur;
+        else head = cur;
+        cur.left = pre;
+        pre = cur;
+        dfs(cur.right);
+    }
+
+    // 给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+    // 链接：https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        int flag = 1;
+        while(!queue.isEmpty()){
+            int len = queue.size();
+            List<Integer> cur = new LinkedList<>();
+            for(int i = 0; i < len; i++){
+                TreeNode node = queue.poll();
+                if(node != null){
+                    if(flag == -1) {
+                        cur.add(0, node.val);
+                    }
+                    else{
+                        cur.add(node.val);
+                    }
+                    queue.add(node.left);
+                    queue.add(node.right);
+                }
+            }
+            if(cur.size() > 0){
+                ans.add(cur);
+            }
+            flag *= -1;
+        }
+        return ans;
+    }
 }

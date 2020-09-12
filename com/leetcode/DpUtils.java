@@ -1,4 +1,4 @@
-package com.leetcode.middle;
+package com.leetcode;
 
 import java.util.HashSet;
 import java.util.List;
@@ -62,5 +62,37 @@ public class DpUtils {
             }
         }
         return dp[n - 1][m - 1];
+    }
+
+    // 输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。
+    // 要求时间复杂度为O(n)。
+    // 链接：https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/
+    public int maxSubArray(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        int ans = nums[0];
+        for(int i = 1; i < nums.length; i++){
+            dp[i] = dp[i - 1] > 0 ? dp[i - 1] + nums[i] : nums[i];
+            ans = Math.max(ans, dp[i]);
+        }
+        return ans;
+    }
+    
+    // 给定一个无序的整数数组，找到其中最长上升子序列的长度。
+    // https://leetcode-cn.com/problems/longest-increasing-subsequence/
+    public static int lengthOfLIS(int[] nums) {
+        if(nums.length < 2) return nums.length;
+        int max = 1;
+        int[] dp = new int[nums.length];
+        for(int i = 0; i < nums.length; i++) dp[i] = 1;
+        for(int i = 1; i < nums.length; i++){
+            for(int j = 0; j < i; j++){
+                if(nums[i] > nums[j]){
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            max = Math.max(dp[i], max);
+        }
+        return max;
     }
 }

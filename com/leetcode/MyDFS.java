@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
 
 // 这里主要是使用深度优先搜索、回溯算法的题型
 // 具体可参考如下链接：
@@ -39,6 +36,7 @@ public class MyDFS {
             }
             // candidates[i] == candidates[i - 1] 用于去除重复选项
             // i > index 用于保证不同index的相同数可以出现在同一组合中
+            // 小剪枝：同一层相同数值的结点，从第 2 个开始，候选数更少，结果一定发生重复，因此跳过，用 continue
             if(i > index && candidates[i] == candidates[i - 1]){
                 continue;
             }
@@ -134,31 +132,6 @@ public class MyDFS {
             listRemovedNum.remove(i);
             dfsTraverseNums(listRemovedNum, new LinkedList<>(list), set, ans);
             list.remove(list.size() - 1);
-        }
-    }
-
-    // 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
-    // 说明：解集不能包含重复的子集。
-    // 链接：https://leetcode-cn.com/problems/subsets/
-    public static List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> ans = new LinkedList<>();
-        if(nums.length > 0){
-            HashSet<Integer> set = new HashSet<>();
-            for(int num : nums) set.add(num);
-            ans.add(new LinkedList<>(set));
-            dfsSubSets(new HashSet<>(set), ans);
-        }
-        ans.add(new LinkedList<>());
-        return ans;
-    }
-
-    private static void dfsSubSets(HashSet<Integer> set, List<List<Integer>> ans){
-        for(int num : set){
-            HashSet<Integer> subSet = new HashSet<>(set);
-            subSet.remove(num);
-            if(subSet.isEmpty()) return;
-            ans.add(new LinkedList<>(subSet));
-            dfsSubSets(subSet, ans);
         }
     }
 
@@ -285,84 +258,163 @@ public class MyDFS {
         generateAllParenthesisCombinations(l + 1, r, cur + "(", ans, n);
         generateAllParenthesisCombinations(l, r + 1, cur + ")", ans, n);
     }
+    // 找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+    // 说明：
+    // 所有数字都是正整数。
+    // 解集不能包含重复的组合。 
+    // 链接：https://leetcode-cn.com/problems/combination-sum-iii
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> ans = new LinkedList<>();
+        if(n > k * 9) return ans;
 
-    // n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
-    // 给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
-    // 链接：https://leetcode-cn.com/problems/n-queens/
-    public static List<List<String>> solveNQueens(int n) {
-        List<List<String>> ans = new LinkedList<>();
-        if(n == 0){
-            ans.add(new LinkedList<>());
-            return ans;
-        }
-        HashSet<Integer> availableNumSet = new HashSet<>();
-        for(int i = 0; i < n; i++) availableNumSet.add(i);
-        List<int[]> possibileAnsList = new LinkedList<>();
-        generateAllPossibleArrangement(n, possibileAnsList, availableNumSet, 0, new int[n]);
-        generateFinalBoard(ans, possibileAnsList, n);
+        dfsCombinationSum3(n, 0, k, ans, new LinkedList<>());
         return ans;
     }
 
-    public static void generateAllPossibleArrangement(int n, List<int[]> res, HashSet<Integer> availableNumSet, int index, int[] curArrangement){
-        if(index == n){
-            if(isValidNQueenArrangement(curArrangement)){
-                res.add(curArrangement);
-            }
+    private static void dfsCombinationSum3(int target, int index, int k, List<List<Integer>> ans, List<Integer> cur){
+        if(index >= k || target <= 0){
+            if(cur.size() == k && target == 0) ans.add(new LinkedList<>(cur));
             return;
         }
-        for(int num : availableNumSet){
-            curArrangement[index] = num;
-            HashSet<Integer> curAvailableNumSet = new HashSet<Integer>(availableNumSet);
-            curAvailableNumSet.remove(num);
-            generateAllPossibleArrangement(n, res, curAvailableNumSet, index + 1, Arrays.copyOf(curArrangement, n));
+        for(int i = 1; i < 10; i++){
+            if(cur.size() > 0 && i <= cur.get(cur.size() - 1)) continue;
+            cur.add(i);
+            dfsCombinationSum3(target - i, index + 1, k, ans, cur);
+            cur.remove(cur.size() - 1);
         }
     }
 
-    private static boolean isValidNQueenArrangement(int[] arr){
-        HashMap<Integer, Set<Integer>> attackedMap = new HashMap<>();
-        for(int i = 0; i < arr.length; i++){
-            if(!attackedMap.containsKey(i) || !attackedMap.get(i).contains(arr[i])){
-                for(int x = i, y = arr[i]; x < arr.length && y < arr.length && x >= 0 && y >= 0; x++, y++){
-                    tryPutKvIntoMap(attackedMap, x, y);
-                }
-                for(int x = i, y = arr[i]; x < arr.length && y < arr.length && x >= 0 && y >= 0; x--, y--){
-                    tryPutKvIntoMap(attackedMap, x, y);
-                }
-                for(int x = i, y = arr[i]; x < arr.length && y < arr.length && x >= 0 && y >= 0; x++, y--){
-                    tryPutKvIntoMap(attackedMap, x, y);
-                }
-                for(int x = i, y = arr[i]; x < arr.length && y < arr.length && x >= 0 && y >= 0; x--, y++){
-                    tryPutKvIntoMap(attackedMap, x, y);
-                }
-            }
-            else{
-                return false;
-            }
+    // 给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+    // 说明：解集不能包含重复的子集。
+    // 链接：https://leetcode-cn.com/problems/subsets/
+    public static List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans = new LinkedList<>();
+        for(int k = 0; k <= nums.length; k++){
+            backTrack(nums, 0, k, ans, new LinkedList<>());
         }
-        return true;
+        return ans;
     }
 
-    private static void tryPutKvIntoMap(HashMap<Integer, Set<Integer>> map, int x, int y){
-        if(map.containsKey(x)){
-            map.get(x).add(y);
+    private static void backTrack(int[] nums, int index, int len, List<List<Integer>> ans, List<Integer> cur){
+        if(cur.size() == len){
+            ans.add(new LinkedList<>(cur));
+            return;
         }
-        else{
-            Set<Integer> newSet = new HashSet<>();
-            newSet.add(y);
-            map.put(x, newSet);
+        for(int i = index; i < nums.length; i++){
+            cur.add(nums[i]);
+            backTrack(nums, i + 1, len, ans, cur);
+            cur.remove(cur.size() - 1);
         }
     }
+    // 本题同样可以使用二进制掩码编号完成
+    public static List<List<Integer>> subsetsII(int[] nums) {
+        List<List<Integer>> ans = new LinkedList<>();
 
-    private static void generateFinalBoard(List<List<String>> res, List<int[]> possibileAnsList, int n){
-        for(int[] arr : possibileAnsList){
-            List<String> curBoard = new ArrayList<>(n);
-            char[] line = new char[n];
-            for(int i = 0; i < n; i++){
-                Arrays.fill(line, '.');
-                line[arr[i]] = 'Q';
-                curBoard.add(String.valueOf(line));
+        int len = nums.length;
+        for(int i = 0; i < Math.pow(2, len); i++){
+            int val = i;
+            int index = nums.length - 1;
+            List<Integer> cur = new LinkedList<>();
+            while(val > 0){
+                if((val & 0x1) == 0x1) cur.add(nums[index]);
+                index--;
+                val >>= 1;
             }
-            res.add(curBoard);
+            ans.add(cur);
+        }
+
+        return ans;
+    }
+    // 给出集合 [1,2,3,…,n]，其所有元素共有 n! 种排列。
+    // 按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+    // "123"
+    // "132"
+    // "213"
+    // "231"
+    // "312"
+    // "321"
+    // 给定 n 和 k，返回第 k 个排列。
+    // 说明：
+    // 给定 n 的范围是 [1, 9]。
+    // 给定 k 的范围是[1,  n!]。
+    // 链接：https://leetcode-cn.com/problems/permutation-sequence
+    public String getPermutation(int n, int k) {
+        // 注意：相当于在 n 个数字的全排列中找到下标为 k - 1 的那个数，因此 k 先减 1
+        k --;
+
+        int[] factorial = new int[n];
+        factorial[0] = 1;
+        // 先算出所有的阶乘值
+        for (int i = 1; i < n; i++) {
+            factorial[i] = factorial[i - 1] * i;
+        }
+
+        // 这里使用数组或者链表都行
+        List<Integer> nums = new LinkedList<>();
+        for (int i = 1; i <= n; i++) {
+            nums.add(i);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // i 表示剩余的数字个数，初始化为 n - 1
+        for (int i = n - 1; i >= 0; i--) {
+            int index = k / factorial[i] ;
+            stringBuilder.append(nums.remove(index));
+            k -= index * factorial[i];
+        }
+        return stringBuilder.toString();
+    }
+
+    // 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+    // 链接：https://leetcode-cn.com/problems/coin-change
+    public static int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.sort(coins);
+
+        for(int i = 0; i <= amount; i++){
+            dp[i] = amount + 1;
+        }
+
+        dp[0] = 0;
+
+        for(int i = 1; i <= amount; i++){
+            for(int j = 0; j < coins.length; j++){
+                if(i < coins[j]) continue;
+                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+            }
+        }
+
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+
+    // 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+    // https://leetcode-cn.com/problems/increasing-subsequences/
+    // TODO: Need Review
+    List<List<Integer>> results;
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        List<List<Integer>> results = new LinkedList<>();
+        dfs(nums, 0, new LinkedList<Integer>());
+        return results;
+    }
+    public void dfs(int[] nums, int index, LinkedList<Integer> result) {
+        if (result.size() > 1) {
+            List<Integer> oneResult = new ArrayList<>();
+            oneResult.addAll(result);
+            results.add(oneResult);
+        }
+        HashSet<Integer> visited = new HashSet<>();
+        for (int i=index; i<nums.length; i++) {
+            if (visited.contains(nums[i])) {
+                continue;
+            }
+            // 使用visited数据结构进行同一层的去重
+            visited.add(nums[i]);
+            if (result.size() == 0 || result.getLast()<=nums[i]) {
+                result.add(nums[i]);
+                dfs(nums, i+1, result);
+                result.removeLast();
+            }
         }
     }
 }

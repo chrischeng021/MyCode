@@ -1,18 +1,14 @@
 package com.leetcode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
+import com.leetcode.middle.SpiralMatrix;
 import com.leetcode.model.TreeNode;
-
-import com.leetcode.middle.BuildBinaryTreeFromPreAndInOrder;
-import com.leetcode.middle.CombinationSum;
-import com.leetcode.WeeklyContest;
-import com.leetcode.MyDFS;
 
 /* cSpell:disable */
 public class Solution {
@@ -84,11 +80,29 @@ public class Solution {
         arr[i] = arr[j];
         arr[j] = iVal;
     }
+    public static boolean verifyPostorder(int[] postorder) {
+        Stack<Integer> stack = new Stack<>();
+        int root = Integer.MAX_VALUE;
+        for(int i = postorder.length - 1; i >= 0; i--) {
+            if(postorder[i] > root) return false;
+            while(!stack.isEmpty() && stack.peek() > postorder[i])
+            	root = stack.pop();
+            stack.add(postorder[i]);
+        }
+        return true;
+    }
+
+    public static boolean canJump(int[] nums) {
+        if(nums.length == 1) return true;
+        int farest = 0;
+        for(int i = 0; i < nums.length - 1; i++){
+            farest = Math.max(farest, i + nums[i]);
+            if(farest >= nums.length - 1) return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
-        List<List<String>> res = MyDFS.solveNQueens(4);
-        for(List<String> list : res){
-            printStringList(list);
-        }
+        System.out.println(DpUtils.lengthOfLIS(new int[]{1,3,6,7,9,4,10,5,6}));
     }
 }

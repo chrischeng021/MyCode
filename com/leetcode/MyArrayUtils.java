@@ -1780,6 +1780,135 @@ public class MyArrayUtils {
         }
         return res;
     }
+    // 地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。
+    // 一个机器人从坐标 [0, 0] 的格子开始移动，它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。
+    // 例如，当k为18时，机器人能够进入方格 [35, 37] ，因为3+5+3+7=18。但它不能进入方格 [35, 38]，因为3+5+3+8=19。请问该机器人能够到达多少个格子？
+    // 链接：https://leetcode-cn.com/problems/ji-qi-ren-de-yun-dong-fan-wei-lcof
+    public static int movingCount(int m, int n, int k) {
+        int[][] matrix = new int[m][n];
+        int res = 0;
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                matrix[i][j] = generateSum(i, j);
+            }
+        }
+        traverseMatrix(matrix, 0, 0, k);
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(matrix[i][j] == -1) res++;
+            }
+        }
+        return res;
+    }
+
+    private static void traverseMatrix(int[][]matrix, int x, int y, int k){
+        if(x >= matrix.length || y >= matrix[0].length || x < 0 || y < 0) return;
+        if(matrix[x][y] != -1 && matrix[x][y] <= k) matrix[x][y] = -1;
+
+        if(x > 0 && matrix[x - 1][y] <= k && matrix[x - 1][y] != -1) traverseMatrix(matrix, x - 1, y, k);
+        if(y > 0 && matrix[x][y - 1] <= k && matrix[x][y - 1] != -1) traverseMatrix(matrix, x, y - 1, k);
+        if((x + 1) < matrix.length && matrix[x + 1][y] <= k && matrix[x + 1][y] != -1) traverseMatrix(matrix, x + 1, y, k);
+        if((y + 1) < matrix[0].length && matrix[x][y + 1] <= k && matrix[x][y + 1] != -1) traverseMatrix(matrix, x, y + 1, k);
+    }
+
+    private static int generateSum(int x, int y){
+        int sumX = 0;
+        int sumY = 0;
+        while(x > 0){
+            sumX += x%10;
+            x /= 10;
+        }
+        while(y > 0){
+            sumY += y%10;
+            y /= 10;
+        }
+        return sumX + sumY;
+    }
+    // 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+    // ( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+    // 搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+    // 你可以假设数组中不存在重复的元素。
+    // 你的算法时间复杂度必须是 O(log n) 级别。
+    // 链接：https://leetcode-cn.com/problems/search-in-rotated-sorted-array
+    public int search(int[] nums, int target) {
+        if(nums.length  == 0) return -1;
+        if(nums.length  == 1) return nums[0] == target ? 0 : -1;
+        // 此时数组为纯升序，没有旋转
+        if(nums[0] < nums[nums.length - 1]){
+            int index = Arrays.binarySearch(nums, target);
+            return index >= 0 ? index : -1;
+        }
+        int index = searchStartIndex(nums, 0, nums.length - 1);
+
+        int lIndex = Arrays.binarySearch(nums, 0, index + 1, target);
+        int rIndex = Arrays.binarySearch(nums, index + 1, nums.length, target);
+
+        return lIndex < 0 && rIndex < 0 ? -1 : Math.max(lIndex, rIndex);
+    }
+
+    private static int searchStartIndex(int[] nums, int start, int end){
+        if(end - start == 1){
+            return nums[start] > nums[end] ? start : end;
+        }
+        int mid = start + (end - start)/2;
+        if(nums[mid] > nums[mid + 1] && nums[mid] >= nums[mid - 1]) return mid;
+        // mid 位于前半段
+        if(nums[mid] > nums[nums.length - 1]){
+            if(nums[mid] < nums[mid + 1]){
+                start = mid;
+            }
+            else{
+                return mid;
+            }
+        }
+        // mid 位于后半段
+        else if(nums[mid] > nums[mid - 1]){
+            end = mid;
+        }else{
+            return mid - 1;
+        }
+        return searchStartIndex(nums, start, end);
+    }
+
+    // 编写一个高效的算法来搜索 m x n 矩阵 matrix 中的一个目标值 target。该矩阵具有以下特性：
+    // 每行的元素从左到右升序排列。
+    // 每列的元素从上到下升序排列。
+    // 链接：https://leetcode-cn.com/problems/search-a-2d-matrix-ii
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix.length == 0) return false;
+        if(matrix.length == 1) return Arrays.binarySearch(matrix[0], target) >= 0;
+
+        int rowsFrom = 0;
+        while(rowsFrom < matrix.length && matrix[rowsFrom][matrix[0].length - 1] < target) rowsFrom++;
+        if(matrix[rowsFrom][matrix[0].length - 1] == target) return true;
+        int rowsTo = rowsFrom;
+        while(rowsTo < matrix.length && matrix[rowsTo][0] < target) rowsTo++;
+        if(matrix[rowsTo][0] == target) return true;
+
+        for(int i = rowsFrom; i < rowsTo; i++){
+            if(Arrays.binarySearch(matrix[i], target) >= 0) return true;
+        }
+        return false;
+    }
+    public boolean searchMatrixII(int[][] matrix, int target) {
+        // 从左下角开始搜索
+        // 若matrix[x][y] 大于目标值，由于当前行为升序排列，当前所有元素都会超过目标值，因此向上前进一排
+        // 若matrix[x][y] 小于目标值，由于当前行为升序排列，尝试向右搜索
+        int x = matrix.length - 1;
+        int y = 0;
+        while(x >= 0 && x < matrix.length && y >= 0 && y < matrix[0].length){
+            if(matrix[x][y] == target) return true;
+            if(matrix[x][y] > target){
+                x--;
+                continue;
+            }
+            else{
+                y++;
+                continue;
+            }
+        }
+        return false;
+    }
     
     /**
      * 合并两个有序数组

@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.leetcode.model.TreeNode;
+
 /* cSpell:disable */
 public class MyStringUtils {
     public static int index = 0;
+    static int ans = 0;
     // 给定一个字符串 S，返回 “反转后的” 字符串，其中不是字母的字符都保留在原地，而所有字母的位置发生反转。
     // 链接：https://leetcode-cn.com/problems/reverse-only-letters/
     public String reverseOnlyLetters(final String S) {
@@ -460,5 +463,149 @@ public class MyStringUtils {
     }
     public static String decodeStringUsingStack(String s){
         return null;
+    }
+
+    // 请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。
+    // 例如，字符串"+100"、"5e2"、"-123"、"3.1416"、"-1E-16"、"0123"都表示数值，但"12e"、"1a3.14"、"1.2.3"、"+-5"及"12e+5.4"都不是。
+    // 链接：https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof
+    public boolean isNumber(String s) {
+        return false;
+    }
+
+    // 给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+    // 链接：https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof
+    // 从Index=0的位置开始遍历字符串 并建立二叉树
+    // 最终二叉树的叶子节点数则是最终的答案
+    public static int translateNum(int num) {
+        if(num > 25 && num < 100) return 1;
+        generateBinaryTree(String.valueOf(num), 0, new TreeNode(-1));
+        return ans;
+    }
+
+    private static void generateBinaryTree(String str, int index, TreeNode root){
+        if(index >= str.length()){
+            ans++;
+            return;
+        }
+        int l = str.charAt(index) - '0';
+        root.left = new TreeNode(l);
+        generateBinaryTree(str, index + 1, root.left);
+        int r = -1;
+        if(index < str.length() - 1){
+            r = Integer.parseInt(str.substring(index, index + 2));
+        }
+        if(r != -1 && r < 26 && r > 9){
+            root.right = new TreeNode(r);
+            generateBinaryTree(str, index + 2, root.left);
+        }
+        else{
+            root.right = null;
+        }
+    }
+    // 写一个函数 StrToInt，实现把字符串转换成整数这个功能。不能使用 atoi 或者其他类似的库函数。
+    // 链接：https://leetcode-cn.com/problems/ba-zi-fu-chuan-zhuan-huan-cheng-zheng-shu-lcof/
+    public static int strToInt(String str) {
+        int begin = -1;
+        int flag = 1;
+        if(str.length() == 0) return 0;
+        int index = 0;
+        while(index < str.length() && str.charAt(index) == ' ') {index++;}
+        if(index >= str.length()) return 0;
+        if(str.charAt(index) == '+'){
+            index++;
+        }
+        else if(str.charAt(index) == '-') {
+            index++;
+            flag = -1;
+        }
+        else if(!Character.isDigit(str.charAt(index))){
+            return 0;
+        }
+        begin = index;
+        while(index < str.length() && Character.isDigit(str.charAt(index))) { index++; }
+        if(begin < 0 || begin >= str.length()) return 0;
+        String validStr = str.substring(begin, index);
+        long val = 0;
+        int factor = validStr.length() - 1;
+        for(int i = 0; i < validStr.length(); i++){
+            val += Math.pow(10, factor--) * (validStr.charAt(i) - '0');
+        }
+
+        val *= flag;
+
+        return val <= Integer.MAX_VALUE && val >= Integer.MIN_VALUE ? (int)val : val < Integer.MIN_VALUE ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+    }
+
+    // 给定一组非负整数，重新排列它们的顺序使之组成一个最大的整数。
+    // https://leetcode-cn.com/problems/largest-number/
+    public static String largestNumber(int[] nums) {
+        Integer[] data = new Integer[nums.length];
+        for(int i = 0; i < nums.length; i++) data[i] = nums[i];
+        Arrays.sort(data, new Comparator<Integer>(){
+            @Override
+            public int compare(Integer a, Integer b){
+                String x = String.valueOf(a).intern() + String.valueOf(b).intern();
+                String y = String.valueOf(b).intern() + String.valueOf(a).intern();
+
+                return y.compareTo(x);
+            }
+        });
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < data.length; i++){
+            sb.append(String.valueOf(data[i]));
+        }
+        return sb.toString().startsWith("0") ? "0" : sb.toString();
+    }
+
+    // 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+    // https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/
+    public static int lengthOfLongestSubstring(String s) {
+        int l = 0, r = 0;
+        int max = 0;
+        HashSet<Character> set = new HashSet<>();
+        while(r < s.length()){
+            char ch = s.charAt(r++);
+            if(!set.contains(ch)){
+                set.add(ch);
+                max = Math.max(max, set.size());
+                continue;
+            }
+            while(set.contains(ch) && l < s.length()){
+                set.remove(s.charAt(l++));
+            }
+            set.add(ch);
+        }
+        return max;
+    }
+    // 找到给定字符串（由小写字符组成）中的最长子串 T ， 要求 T 中的每一字符出现次数都不少于 k 。输出 T 的长度。
+    // https://leetcode-cn.com/problems/longest-substring-with-at-least-k-repeating-characters/
+    static int max = 0;
+    public static int longestSubstring(String s, int k) {
+        if(s.length() < k) return 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(map.containsKey(ch)) map.put(ch, map.get(ch) + 1);
+            else map.put(ch, 1);
+        }
+        HashSet<Character> chars = new HashSet<>();
+        for(Map.Entry<Character, Integer> entry : map.entrySet()){
+            if(entry.getValue() < k){
+                chars.add(entry.getKey());
+            }
+        }
+        if(chars.size() == 0) return s.length();
+        List<String> strs = new LinkedList<>();
+        for(int i = 0; i < s.length(); i++){
+            while(i < s.length() && chars.contains(s.charAt(i))) i++;
+            if(i == s.length()) break;
+            int j = i + 1;
+            while(j < s.length() && !chars.contains(s.charAt(j))) j++;
+            strs.add(s.substring(i, j));
+        }
+        for(String str : strs){
+            max = Math.max(longestSubstring(str, k), max);
+        }
+        return max;
     }
 }
