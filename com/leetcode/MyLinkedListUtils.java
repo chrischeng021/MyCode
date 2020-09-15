@@ -706,6 +706,36 @@ public class MyLinkedListUtils {
         }
         return reverseList(reverseHead);
     }
+    
+    // 在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序。
+    // https://leetcode-cn.com/problems/sort-list/
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode slow = head, fast = head.next;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode rHead = slow.next;
+        slow.next = null;
+        ListNode lSortedHead = sortList(head);
+        ListNode rSortedHead = sortList(rHead);
+        ListNode pHead = new ListNode(0);
+        ListNode res = pHead;
+        while(lSortedHead != null && rSortedHead != null){
+            if(lSortedHead.val < rSortedHead.val){
+                pHead.next = lSortedHead;
+                lSortedHead = lSortedHead.next;
+            }
+            else{
+                pHead.next = rSortedHead;
+                rSortedHead = rSortedHead.next;
+            }
+            pHead = pHead.next;
+        }
+        pHead.next = lSortedHead == null ? rSortedHead : lSortedHead;
+        return res.next;
+    }
 
     // 获取指定链表长度
     private static int getListLength(ListNode head) {

@@ -387,6 +387,34 @@ public class MyDFS {
 
         return dp[amount] == amount + 1 ? -1 : dp[amount];
     }
+    static boolean isExisted = false;
+    public static boolean exist(char[][] board, String word) {
+        int rows = board.length;
+        int columns = board[0].length;
+        if(rows * columns < word.length()) return false;
+
+        for(int x = 0; x < rows; x++){
+            for(int y = 0; y < columns; y++){
+                if(board[x][y] != word.charAt(0)) continue;
+                dfs(board, new byte[rows][columns],x, y, word, 0);
+                if(isExisted) return true;
+            }
+        }
+        return false;
+    }
+
+    private static void dfs(char[][] board, byte[][] visited, int x, int y, String word, int index){
+        if(index == word.length() - 1){
+            isExisted = true;
+            return;
+        }
+        visited[x][y] = 1;
+        if(!isExisted && x - 1 >= 0 && board[x - 1][y] == word.charAt(index + 1) && visited[x - 1][y] == 0) dfs(board, visited, x - 1, y, word, index + 1);
+        if(!isExisted && x + 1 < board.length && board[x + 1][y] == word.charAt(index + 1) && visited[x + 1][y] == 0) dfs(board, visited, x + 1, y, word, index + 1);
+        if(!isExisted && y - 1 >= 0 && board[x][y - 1] == word.charAt(index + 1) && visited[x][y - 1] == 0) dfs(board, visited, x, y - 1, word, index + 1);
+        if(!isExisted && y + 1 < board[0].length && board[x][y + 1] == word.charAt(index + 1) && visited[x][y + 1] == 0) dfs(board, visited, x, y + 1, word, index + 1);
+        visited[x][y] = 0;
+    }
 
     // 给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
     // https://leetcode-cn.com/problems/increasing-subsequences/

@@ -13,6 +13,7 @@ public class MyGraphUtils {
     // 链接：https://leetcode-cn.com/problems/course-schedule
 
     // 第一种做法是使用入度表
+    // BFS遍历
     public boolean canFinishBFS(int numCourses, int[][] prerequisites) {
         // 初始化并生成入度表
         HashMap<Integer, HashSet<Integer>> inDegreeMap = new HashMap<>();
@@ -48,6 +49,39 @@ public class MyGraphUtils {
         }
 
         return availableCount == numCourses;
+    }
+    // DFS遍历
+    boolean ans = true;
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, HashSet<Integer>> edges = new HashMap<>();
+        for(int[] edge : prerequisites){
+            if(!edges.containsKey(edge[1])) edges.put(edge[1], new HashSet<>());
+            edges.get(edge[1]).add(edge[0]);
+        }
+        
+        int[] visited = new int[numCourses];
+        for(int i = 0; i < numCourses && ans; i++){
+            if(visited[i] == 0){
+                dfs(visited, i, edges);
+            }
+        }
+        return ans;
+    }
+    public void dfs(int[] visited, int cur, HashMap<Integer, HashSet<Integer>> edges){
+        visited[cur] = 1;
+        if(edges.containsKey(cur)) {
+            for(int to : edges.get(cur)){
+                if(visited[to] == 1) {
+                    ans = false;
+                    return;
+                }
+                if(visited[to] == 0){
+                    dfs(visited, to, edges);
+                    if(!ans) return;
+                }
+            }
+        }
+        visited[cur] = 2;
     }
 
     // 现在你总共有 n 门课需要选，记为 0 到 n-1。
@@ -98,5 +132,47 @@ public class MyGraphUtils {
         else{
             return ans;
         }
+    }
+
+    // DFS Solution
+    boolean flag = true;
+    int index = 0;
+    int[] res;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        index = numCourses - 1;
+        res = new int[numCourses];
+        HashMap<Integer, HashSet<Integer>> edges = new HashMap<>();
+        for(int[] edge : prerequisites){
+            if(!edges.containsKey(edge[1])) edges.put(edge[1], new HashSet<>());
+            edges.get(edge[1]).add(edge[0]);
+        }
+        
+        int[] visited = new int[numCourses];
+        for(int i = 0; i < numCourses && flag; i++){
+            if(visited[i] == 0){
+                dfsFindOrder(visited, i, edges);
+            }
+        }
+
+        if(!flag) return new int[0];
+        return res;
+
+    }
+    public void dfsFindOrder(int[] visited, int cur, HashMap<Integer, HashSet<Integer>> edges){
+        visited[cur] = 1;
+        if(edges.containsKey(cur)) {
+            for(int to : edges.get(cur)){
+                if(visited[to] == 1) {
+                    flag = false;
+                    return;
+                }
+                if(visited[to] == 0){
+                    dfsFindOrder(visited, to, edges);
+                    if(!flag) return;
+                }
+            }
+        }
+        res[index--] = cur;
+        visited[cur] = 2;
     }
 }
