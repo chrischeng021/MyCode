@@ -1,15 +1,12 @@
 package com.leetcode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
+import java.util.Map;
 import java.util.Stack;
 
-import com.leetcode.middle.LongestPalindromicSubstring;
-import com.leetcode.middle.SpiralMatrix;
-import com.leetcode.model.TreeNode;
+import com.leetcode.hard.SlidingWindowMaximum;
 
 /* cSpell:disable */
 public class Solution {
@@ -143,7 +140,20 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        int ans = numDecodings("12120");
-        System.out.println(ans);
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for(int i = -10; i <=10; i++)arrayList.add(i);
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        arrayList.stream().filter((i) -> i % 2 == 0).forEach(
+            (i) ->{
+                if(!map.containsKey(i * i) || map.containsKey(i * i) && map.get(i * i) > i) map.put(i * i, i);
+            }
+        );
+
+        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
+            System.out.println(entry.getKey() + "," + entry.getValue());
+        }
+
+        printIntArray(SlidingWindowMaximum.maxSlidingWindow(new int[]{1,3,-1}, 3));
     }
 }
