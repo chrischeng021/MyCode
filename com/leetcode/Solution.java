@@ -140,20 +140,6 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for(int i = -10; i <=10; i++)arrayList.add(i);
-
-        HashMap<Integer, Integer> map = new HashMap<>();
-        arrayList.stream().filter((i) -> i % 2 == 0).forEach(
-            (i) ->{
-                if(!map.containsKey(i * i) || map.containsKey(i * i) && map.get(i * i) > i) map.put(i * i, i);
-            }
-        );
-
-        for(Map.Entry<Integer, Integer> entry: map.entrySet()){
-            System.out.println(entry.getKey() + "," + entry.getValue());
-        }
-
-        printIntArray(SlidingWindowMaximum.maxSlidingWindow(new int[]{1,3,-1}, 3));
+        System.out.println("Hello world.");
     }
 }
